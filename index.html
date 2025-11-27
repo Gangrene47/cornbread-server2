@@ -577,6 +577,34 @@
   /* initial render */
   renderUpgrades();
   updateStats();
+
+/* ===== MINECRAFT SERVER STATUS CHECK ===== */
+const STATUS_URL = "https://api.mcsrvstat.us/2/gangrene.mexicancornbread.org";
+
+async function updateServerStatus(){
+  try {
+    document.getElementById("status").textContent = "Checking...";
+    const res = await fetch(STATUS_URL);
+    const data = await res.json();
+
+    if (!data || !data.online){
+      document.getElementById("status").textContent = "Offline";
+      document.getElementById("players").textContent = "0 / 0";
+      return;
+    }
+
+    document.getElementById("status").textContent = "Online ✅";
+    document.getElementById("players").textContent =
+      `${data.players?.online || 0} / ${data.players?.max || 0}`;
+  } catch (e){
+    document.getElementById("status").textContent = "Error";
+    document.getElementById("players").textContent = "0 / 0";
+  }
+}
+
+/* run immediately + refresh every 30s */
+updateServerStatus();
+setInterval(updateServerStatus, 30000);
   </script>
 
 </body>
