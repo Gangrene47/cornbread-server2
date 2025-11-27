@@ -1,579 +1,584 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#fdf6e3; --accent:#c0392b; --panel:#fff8e1;
-  }
-  body {
-    font-family: 'Press Start 2P', cursive;
-    background-color: var(--bg);
-    color: var(--accent);
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-  #left, #right { padding: 10px; }
-  #left { flex: 1; min-width: 300px; max-width: 600px; text-align: center; }
-  h1 { font-size: 24px; margin: 10px 0; }
-  #serverIP { font-size: 18px; margin: 5px 0; }
-  #recipe {
-    font-family:'Comic Sans MS', cursive;
-    font-size:16px;
-    color:black;
-    text-align:left;
-    background-color:var(--panel);
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    border:3px solid var(--accent);
-    margin-top:20px;
-  }
-  img {
-    height: auto;
-    border-radius: 10px;
-    border: 3px solid var(--accent);
-    transition: transform 0.15s;
-    display: block;
-    margin: 10px auto;
-  }
-  img:hover { transform: scale(1.05); }
-  #right {
-    flex: 0 0 440px;
-    background-color:var(--panel);
-    border-radius:10px;
-    padding:20px;
-    margin-left:20px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    text-align:center;
-    border:3px solid var(--accent);
-    min-width: 320px;
-  }
-  #cornbreadCounter { font-size:18px; margin-bottom:5px; }
-  #cpsCounter { font-size:14px; margin-bottom:10px; }
-  #legacyRow { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
-  #legacyPoints { font-size:12px; color:#333; }
-  .controlRow { display:flex; gap:8px; justify-content:center; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
-  select, button.smallBtn {
-    font-family:'Comic Sans MS', cursive; font-size:12px; padding:6px 8px; border-radius:6px; border:2px solid var(--accent);
-    background:var(--bg); cursor:pointer;
-  }
-  .smallBtn:disabled{ opacity:0.5; cursor:not-allowed; }
-  .upgradeButton {
-    display:block; margin:6px auto;
-    padding:10px;
-    font-size:12px;
-    font-family:'Comic Sans MS', cursive;
-    color:black; width:96%; cursor:pointer;
-    border-radius:6px; border:2px solid #c0392b;
-    background-color:var(--bg); transition:0.12s;
-    text-align:left;
-    position:relative;
-  }
-  .upgradeButton:hover:not(:disabled){ background-color:#c0392b; color:white; transform:translateY(-2px); }
-  .upgradeButton:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
-  #upgrades { max-height: 420px; overflow:auto; padding-bottom:6px; }
-  .small { font-size:10px; color:#333; display:block; margin-top:4px; }
-  /* tooltip */
-  .tooltip {
-    position:fixed; pointer-events:none; background:#fff; color:#000; border-radius:6px; padding:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);
-    border:2px solid var(--accent); font-family:'Comic Sans MS',cursive; font-size:12px; z-index:9999; display:none;
-    max-width:260px;
-  }
-  .tooltip b{ color:var(--accent); }
-  /* ascend modal strip */
-  #ascendBox { margin-top:12px; padding:8px; background:#fff; border-radius:6px; border:2px dashed #c0392b; color:#111; }
-  #aiChatTab { display:none; position:fixed; top:50px; right:20px; width:300px; background:var(--panel); border:3px solid var(--accent); border-radius:10px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:100; }
-  #chatContent { display:none; font-family:'Comic Sans MS', cursive; font-size:14px; color:black; }
-  #chatLog { height:200px; overflow-y:auto; border:1px solid var(--accent); padding:5px; margin-bottom:5px; background:white; }
-  #chatInput { width:calc(100% - 10px); padding:5px; font-family:'Comic Sans MS', cursive; font-size:14px; }
-  @media(max-width:800px){
-    body{ flex-direction: column; align-items:center; }
-    #right{ margin-left:0; margin-top:20px; width:92%; }
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5) — Cornbread Clicker</title>
+  <link rel="icon" href="https://www.chilipeppermadness.com/wp-content/uploads/2024/04/Mexican-Cornbread-Recipe-SQ.jpg" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fdf6e3;
+      --accent: #c0392b;
+      --panel: #fff8e1;
+      --muted: #555;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: var(--bg);
+      color: var(--accent);
+      margin: 0; padding: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    #left, #right { padding: 10px; }
+    #left { flex:1; min-width:300px; max-width:620px; text-align:center; }
+    h1 { font-size:22px; margin:6px 0; }
+    #serverIP { font-size:16px; margin:6px 0; }
+    #recipe {
+      font-family:'Comic Sans MS', cursive;
+      font-size:15px;
+      color:#000;
+      text-align:left;
+      background: var(--panel);
+      padding:18px;
+      border-radius:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+      border:3px solid var(--accent);
+      margin-top:16px;
+    }
+    img.centered {
+      height:auto;
+      border-radius:10px;
+      border:3px solid var(--accent);
+      transition: transform .12s;
+      display:block;
+      margin:10px auto;
+    }
+    img.centered:hover { transform: scale(1.03); }
+
+    #right {
+      flex:0 0 480px;
+      background: var(--panel);
+      border-radius:10px;
+      padding:16px;
+      margin-left:18px;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);
+      text-align:center;
+      border:3px solid var(--accent);
+      min-width:320px;
+    }
+    #cornbreadCounter { font-size:18px; margin-bottom:6px; }
+    #cpsCounter { font-size:14px; margin-bottom:10px; color: var(--muted); }
+
+    #controls { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:10px; }
+    select, button.small { font-family:'Comic Sans MS',cursive; font-size:13px; padding:6px 8px; border-radius:8px; border:2px solid var(--accent); background: var(--bg); cursor:pointer; }
+    button.small:disabled { opacity: .5; cursor: not-allowed; }
+
+    #upgrades { max-height:420px; overflow:auto; padding:6px; border-radius:6px; }
+
+    .upgrade-btn {
+      display:flex; align-items:center; gap:10px;
+      padding:8px; margin:6px 2px;
+      border-radius:8px; border:2px solid #b33;
+      background:#fff; color:#111;
+      cursor:pointer; transition: all .12s;
+      width:100%;
+    }
+    .upgrade-btn.disabled { opacity:.5; cursor:not-allowed; background:#f6f6f6; }
+    .upgrade-btn:hover:not(.disabled) { transform: translateY(-3px); box-shadow:0 6px 18px rgba(0,0,0,.08); }
+
+    .upgrade-icon {
+      width:40px; height:40px;
+      object-fit:cover; border-radius:6px;
+      border:2px solid var(--accent);
+    }
+    .upgrade-text { font-family:'Comic Sans MS',cursive; font-size:12px; text-align:left; color:#111; }
+    .upgrade-sub { font-size:11px; color:#444; margin-top:4px; }
+
+    .tooltip {
+      position:fixed; pointer-events:none;
+      background:#fff; color:#000;
+      border-radius:8px; padding:8px;
+      border:2px solid var(--accent);
+      box-shadow:0 6px 18px rgba(0,0,0,.12);
+      font-family:'Comic Sans MS',cursive; font-size:12px;
+      display:none; z-index:9999; max-width:260px;
+    }
+    .tooltip b { color: var(--accent); }
+
+    .float-num {
+      position:fixed;
+      font-family:'Comic Sans MS',cursive;
+      font-weight:bold;
+      color:var(--accent);
+      pointer-events:none;
+      z-index:999;
+    }
+    .crumb {
+      position:fixed; width:8px; height:8px; border-radius:50%;
+      background:#fbdb9a; pointer-events:none; opacity:0.9;
+      z-index:998;
+    }
+    #notifier { position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:9999; }
+    .notify {
+      background:#fff; padding:8px 12px; border-radius:8px;
+      border:2px solid var(--accent);
+      box-shadow:0 6px 20px rgba(0,0,0,.12);
+      margin-top:8px;
+      font-family:'Comic Sans MS',cursive;
+      font-size:13px;
+    }
+    #golden {
+      position:fixed; display:none; z-index:9998;
+      cursor:pointer; border-radius:12px;
+      border:3px solid gold;
+      padding:6px;
+      background: linear-gradient(45deg,#fff9d9,#ffd84d);
+      box-shadow: 0 10px 30px rgba(255,200,0,.25);
+    }
+    #ascendBox {
+      margin-top:12px; padding:10px;
+      border-radius:8px; border:2px dashed var(--accent);
+      background:#fff;
+      font-family:'Comic Sans MS',cursive;
+      font-size:12px; color:#111;
+    }
+    #achievements { margin-top:10px; text-align:left; font-size:12px; color:#333; }
+
+    #factStrip {
+      position: fixed; bottom: 8px; left: 8px;
+      background: #fff; padding: 8px;
+      border-radius:8px; border:2px solid var(--accent);
+      font-family:'Comic Sans MS',cursive;
+      font-size:12px;
+      z-index:999;
+    }
+
+    @media(max-width:900px){
+      #right { min-width:92%; margin-left:0; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="left">
-  <h1>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</h1>
-  <h2 id="serverIP">Server IP: gangrene.mexicancornbread.org</h2>
-  <p>Status: <span id="status">Loading...</span></p>
-  <p>Players: <span id="players">0 / 0</span></p>
+  <!-- LEFT: server info + images + recipe -->
+  <div id="left">
+    <h1>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</h1>
+    <h2 id="serverIP">Server IP: gangrene.mexicancornbread.org</h2>
+    <p>Status: <span id="status">Loading...</span></p>
+    <p>Players: <span id="players">0 / 0</span></p>
 
-  <!-- Center Cornbread Image CLICKABLE -->
-  <a href="https://southernbite.com/moms-mexican-cornbread-the-national-cornbread-cook-off/" target="_blank">
-    <img id="mainCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
-  </a>
+    <!-- clickable main cornbread (300px) -->
+    <a href="https://southernbite.com/moms-mexican-cornbread-the-national-cornbread-cook-off/" target="_blank">
+      <img id="mainCornbread" class="centered" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
+    </a>
 
-  <!-- GIFs -->
-  <img src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" alt="Animated Cornbread GIF 1" width="300">
-  <img src="https://64.media.tumblr.com/0975771a0de36698e06cf2d2a0ce4b3b/tumblr_ml8ihl8v1B1s4rkemo4_250.gif" alt="Animated Cornbread GIF 2" width="300">
+    <!-- GIFs -->
+    <img class="centered" src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" alt="gif1" width="300">
+    <img class="centered" src="https://64.media.tumblr.com/0975771a0de36698e06cf2d2a0ce4b3b/tumblr_ml8ihl8v1B1s4rkemo4_250.gif" alt="gif2" width="300">
 
-  <div id="recipe">
-    <h3>Ingredients</h3>
-    <ul>
-      <li>1/2 pound ground beef</li>
-      <li>1 large onion, chopped</li>
-      <li>3 tablespoons vegetable oil</li>
-      <li>1 cup self-rising cornmeal</li>
-      <li>1 cup buttermilk</li>
-      <li>1 (14.75 oz) can cream style corn</li>
-      <li>2 eggs well beaten</li>
-      <li>1 (4 oz) can sliced jalapenos, drained (optional)</li>
-      <li>1 cup shredded cheddar cheese</li>
-    </ul>
-    <h3>Instructions</h3>
-    <p>...Full instructions here...</p>
-  </div>
-</div>
-
-<div id="right">
-  <h2>Cornbread Clicker</h2>
-  <p id="cornbreadCounter">Cornbread: 0</p>
-  <p id="cpsCounter">Cornbread/sec: 0</p>
-
-  <div id="legacyRow">
-    <div id="legacyPoints">Legacy: <span id="legacyVal">0</span> (<span id="legacyBonus">+0%</span> CPS)</div>
-    <div>
-      <button id="ascendBtn" class="smallBtn">Ascend</button>
+    <div id="recipe">
+      <h3>Ingredients</h3>
+      <ul>
+        <li>1/2 pound ground beef</li>
+        <li>1 large onion, chopped</li>
+        <li>3 tablespoons vegetable oil</li>
+        <li>1 cup self-rising cornmeal</li>
+        <li>1 cup buttermilk</li>
+        <li>1 (14.75 oz) can cream style corn</li>
+        <li>2 eggs well beaten</li>
+        <li>1 (4 oz) can sliced jalapenos, drained (optional)</li>
+        <li>1 cup shredded cheddar cheese</li>
+      </ul>
+      <h3>Instructions</h3>
+      <p>...Full instructions here...</p>
     </div>
   </div>
 
-  <div class="controlRow">
-    <label style="font-size:11px;color:#333;">Buy mode:</label>
-    <select id="buyMode">
-      <option value="1">x1</option>
-      <option value="10">x10</option>
-      <option value="max">Max</option>
-    </select>
-    <button id="resetBtn" class="smallBtn">Reset Save</button>
+  <!-- RIGHT: clicker UI -->
+  <div id="right">
+    <h2>Cornbread Clicker — Mexican Corn Edition</h2>
+    <div id="cornbreadCounter">Cornbread: 0</div>
+    <div id="cpsCounter">Cornbread/sec: 0</div>
+
+    <div id="controls">
+      <select id="buyMode" title="Buy mode">
+        <option value="1">x1</option>
+        <option value="10">x10</option>
+        <option value="max">Max</option>
+      </select>
+      <button id="toggleMusic" class="small">Music: Off</button>
+      <button id="toggleSfx" class="small">SFX: On</button>
+      <button id="resetBtn" class="small">Reset</button>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <img id="clickCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Click" width="150" style="cursor:pointer">
+    </div>
+
+    <div id="upgrades" aria-live="polite"></div>
+
+    <div id="ascendBox">
+      <div style="margin-bottom:6px">Batter Ascension: gain <strong id="ascendGain">0</strong> Batter Points (each +2% CPS) if you ascend now.</div>
+      <button id="ascendBtn" class="small">Ascend (Prestige)</button>
+      <div style="margin-top:8px">Batter Points: <span id="batterPoints">0</span> — Bonus: <span id="batterBonus">+0%</span></div>
+    </div>
+
+    <div id="achievements"><strong>Achievements</strong><ul id="achList" style="margin:6px 0 0 14px;padding:0;font-size:12px;"></ul></div>
   </div>
 
-  <div class="controlRow">
-    <img id="clickCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Click Cornbread" width="150" style="cursor:pointer">
-  </div>
+  <!-- golden cornbread button -->
+  <button id="golden"></button>
 
-  <div id="upgrades"></div>
+  <!-- notifier area -->
+  <div id="notifier"></div>
 
-  <div id="ascendBox">
-    <div style="font-size:12px;margin-bottom:6px;color:#333">Ascend to earn Legacy Points. Each Legacy point gives +1% CPS permanently.</div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <div style="font-size:12px;color:#333">You would earn: <strong id="ascendGain">0</strong></div>
-      <button id="confirmAscend" class="smallBtn">Confirm Ascend</button>
+  <!-- tooltip for upgrades -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- random facts strip -->
+  <div id="factStrip">Did you know? Mexican cornbread can be sweet or savory!</div>
+
+  <!-- (Optional) AI chat area left intact -->
+  <div id="aiChatTab" style="display:none">
+    <button id="toggleAIChat">Toggle AI Study Chat</button>
+    <div id="chatContent">
+      <div id="chatLog"></div>
+      <input type="text" id="chatInput" placeholder="Ask a question...">
+      <button id="sendChat">Send</button>
     </div>
   </div>
-</div>
 
-<div id="aiChatTab">
-  <button id="toggleAIChat">Toggle AI Study Chat</button>
-  <div id="chatContent">
-    <div id="chatLog"></div>
-    <input type="text" id="chatInput" placeholder="Ask a question...">
-    <button id="sendChat">Send</button>
-  </div>
-</div>
+  <script>
+  /* ===== CONFIG ===== */
+  const ICON_URL = "https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg";
+  const GOLDEN_MIN_SECONDS = 120;
+  const GOLDEN_MAX_SECONDS = 360;
+  const GOLDEN_TTL = 10000;
+  const GOLDEN_CLICK_MULT = 10;
+  const SAVE_KEY = "mcb_cornbread_full";
 
-<div class="tooltip" id="tooltip"></div>
+  const SOUNDS = { click:null, buy:null, golden:null, ascend:null };
+  const MUSIC = { bg:null };
+  let SFX_ON = true, MUSIC_ON = false;
 
-<script>
-// --------------------- Server Status ---------------------
-async function updateStatus() {
-  const ip = "gangrene.mexicancornbread.org";
-  const url = `https://api.mcsrvstat.us/2/${ip}`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    document.getElementById("status").textContent = data.online ? "Online" : "Offline";
-    document.getElementById("players").textContent = data.players?.online != null && data.players?.max != null ? `${data.players.online} / ${data.players.max}` : "0 / 0";
-  } catch (err) { console.error(err); document.getElementById("status").textContent = "Error"; }
-}
-updateStatus(); setInterval(updateStatus,30000);
+  /* ===== STATE ===== */
+  let saved = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}");
+  let cornbread = saved.cornbread ?? 0;
+  let clickValue = saved.clickValue ?? 1;
+  let totalEarned = saved.totalEarned ?? cornbread;
+  let batterPoints = saved.batterPoints ?? 0;
+  let lastTick = saved.lastTick ?? Date.now();
+  let upgrades = saved.upgrades || [];
 
-// --------------------- Clicker + Upgrades + Prestige ---------------------
-const STORAGE_KEY = 'cornbread_clicker_v3';
-let saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-
-// player state
-let cornbread = saved.cornbread ?? 0;
-let clickValue = saved.clickValue ?? 1;
-let totalEarned = saved.totalEarned ?? (saved.cornbread ?? 0); // used for ascend calculation
-let legacy = saved.legacy ?? 0; // legacy points
-let lastTick = saved.lastTick ?? Date.now();
-
-// buy mode
-const buyModeEl = document.getElementById('buyMode');
-
-// create upgrades array (same as prior 62-ish entries) - keep id stable so saves map correctly
-let upgrades = saved.upgrades || [
-  { id: "click1", name:"Finger Tap", type:"click", baseCost:10, baseValue:1, level:0 },
-  { id: "click2", name:"Double Tap", type:"click", baseCost:75, baseValue:2, level:0 },
-  { id: "click3", name:"Triple Tap", type:"click", baseCost:400, baseValue:5, level:0 },
-  { id: "cursor", name:"Cursor", type:"auto", baseCost:25, baseValue:0.1, level:0},
-  { id: "grandma", name:"Grandma", type:"auto", baseCost:100, baseValue:0.5, level:0},
-  { id: "farm", name:"Farm", type:"auto", baseCost:500, baseValue:2.0, level:0},
-  { id: "mine", name:"Mine", type:"auto", baseCost:3000, baseValue:8.0, level:0},
-  { id: "factory", name:"Factory", type:"auto", baseCost:10000, baseValue:30.0, level:0},
-  { id: "bank", name:"Bank", type:"auto", baseCost:40000, baseValue:100.0, level:0},
-  { id: "temple", name:"Temple", type:"auto", baseCost:200000, baseValue:500.0, level:0},
-  { id: "wizard", name:"Wizard Tower", type:"auto", baseCost:1000000, baseValue:3000.0, level:0},
-  { id: "click4", name:"Spicy Click", type:"click", baseCost:2500, baseValue:20, level:0},
-  { id: "click5", name:"Savory Click", type:"click", baseCost:25000, baseValue:150, level:0},
-  { id: "shipment", name:"Shipment", type:"auto", baseCost:5000000, baseValue:10000, level:0},
-  { id: "alchemy", name:"Alchemy Lab", type:"auto", baseCost:20000000, baseValue:60000, level:0},
-  { id: "portal", name:"Portal", type:"auto", baseCost:100000000, baseValue:300000, level:0},
-  { id: "timeMachine", name:"Time Machine", type:"auto", baseCost:1000000000, baseValue:2000000, level:0},
-  { id: "antimatter", name:"Antimatter Condenser", type:"auto", baseCost:1e10, baseValue:15000000, level:0},
-  { id: "prism", name:"Prism", type:"auto", baseCost:5e11, baseValue:100000000, level:0},
-  { id: "barn", name:"Barn", type:"auto", baseCost:2000, baseValue:6, level:0},
-  { id: "oven", name:"Oven", type:"auto", baseCost:8000, baseValue:25, level:0},
-  { id: "smelter", name:"Smelter", type:"auto", baseCost:22000, baseValue:80, level:0},
-  { id: "warehouse", name:"Warehouse", type:"auto", baseCost:70000, baseValue:250, level:0},
-  { id: "dock", name:"Dock", type:"auto", baseCost:180000, baseValue:450, level:0},
-  { id: "hangar", name:"Hangar", type:"auto", baseCost:450000, baseValue:1200, level:0},
-  { id: "foundry", name:"Foundry", type:"auto", baseCost:1100000, baseValue:3500, level:0},
-  { id: "lab", name:"Research Lab", type:"auto", baseCost:2800000, baseValue:9000, level:0},
-  { id: "observatory", name:"Observatory", type:"auto", baseCost:7500000, baseValue:26000, level:0},
-  { id: "stadium", name:"Stadium", type:"auto", baseCost:20000000, baseValue:78000, level:0},
-  { id: "resort", name:"Resort", type:"auto", baseCost:60000000, baseValue:240000, level:0},
-  { id: "spaceStation", name:"Space Station", type:"auto", baseCost:2e8, baseValue:900000, level:0},
-  { id: "galacticBank", name:"Galactic Bank", type:"auto", baseCost:8e8, baseValue:4e6, level:0},
-  { id: "quantumFarm", name:"Quantum Farm", type:"auto", baseCost:3e9, baseValue:15e6, level:0},
-  { id: "click6", name:"Savory Swipe", type:"click", baseCost:1e5, baseValue:800, level:0},
-  { id: "click7", name:"Golden Finger", type:"click", baseCost:5e6, baseValue:12000, level:0},
-  { id: "click8", name:"Legendary Tap", type:"click", baseCost:2e8, baseValue:300000, level:0},
-  { id: "hut", name:"Hut", type:"auto", baseCost:60, baseValue:0.4, level:0 },
-  { id: "workshop", name:"Workshop", type:"auto", baseCost:140, baseValue:1.2, level:0 },
-  { id: "bakery", name:"Bakery", type:"auto", baseCost:360, baseValue:2.6, level:0 },
-  { id: "silo", name:"Silo", type:"auto", baseCost:860, baseValue:5.4, level:0 },
-  { id: "mill", name:"Mill", type:"auto", baseCost:2200, baseValue:11, level:0 },
-  { id: "brewery", name:"Brewery", type:"auto", baseCost:4800, baseValue:24, level:0 },
-  { id: "distillery", name:"Distillery", type:"auto", baseCost:11000, baseValue:55, level:0 },
-  { id: "canning", name:"Canning Plant", type:"auto", baseCost:26000, baseValue:130, level:0 },
-  { id: "packhouse", name:"Packhouse", type:"auto", baseCost:64000, baseValue:320, level:0 },
-  { id: "distributor", name:"Distributor", type:"auto", baseCost:160000, baseValue:850, level:0 },
-  { id: "logistics", name:"Logistics Center", type:"auto", baseCost:420000, baseValue:2300, level:0 },
-  { id: "pipeline", name:"Pipeline", type:"auto", baseCost:1e6, baseValue:6200, level:0 },
-  { id: "reactor", name:"Reactor", type:"auto", baseCost:2.8e6, baseValue:18500, level:0 },
-  { id: "fusion", name:"Fusion Core", type:"auto", baseCost:8e6, baseValue:56000, level:0 },
-  { id: "terraform", name:"Terraformer", type:"auto", baseCost:2.4e7, baseValue:190000, level:0 },
-  { id: "dyson", name:"Dyson Swarm", type:"auto", baseCost:7.5e7, baseValue:700000, level:0 },
-  { id: "click9", name:"Celestial Click", type:"click", baseCost:5e9, baseValue:60e6, level:0 },
-  { id: "click10", name:"Singularity Tap", type:"click", baseCost:3e11, baseValue:2e9, level:0 },
-  { id: "singularity", name:"Singularity", type:"auto", baseCost:1e11, baseValue:8e8, level:0 },
-  { id: "multiverse", name:"Multiverse Hub", type:"auto", baseCost:5e12, baseValue:5e10, level:0 },
-  { id: "omniplant", name:"Omniplant", type:"auto", baseCost:2e14, baseValue:4e12, level:0 }
-];
-
-// Ensure we have 62 entries (fill if needed)
-(function ensureCount(){
-  const target = 62;
-  const names = ['Spice','Sauce','Crisp','Crunch','Buttery','Zesty','Smoky','Golden','Hot','Sweet','Sourdough','Baked'];
-  let idx = 0;
-  while (upgrades.length < target) {
-    const n = upgrades.length + 1;
-    upgrades.push({
-      id: 'filler' + n,
-      name: `${names[idx % names.length]} Unit ${n}`,
-      type: (n % 3 === 0) ? 'click' : 'auto',
-      baseCost: Math.round(50 * Math.pow(1.9, n/10)),
-      baseValue: +( (n % 3 === 0) ? (Math.pow(1.7, n/12)) : (Math.pow(1.6, n/10) ) ).toFixed(2),
-      level: 0
-    });
-    idx++;
+  // If no save upgrades, create default 50 upgrades
+  if(upgrades.length === 0) {
+    upgrades = [
+      {id:'u1', name:"Abuela’s Tiny Skillet", baseCost:10, baseCps:0.5, level:0},
+      {id:'u2', name:"Pan Dulce Toaster", baseCost:22, baseCps:1, level:0},
+      {id:'u3', name:"Street Vendor Ladle", baseCost:50, baseCps:2, level:0},
+      {id:'u4', name:"Golden Corn Measure Cup", baseCost:95, baseCps:3, level:0},
+      {id:'u5', name:"Cast-Iron Sizzle Pot", baseCost:150, baseCps:5, level:0},
+      {id:'u6', name:"Elote Butter Mixer", baseCost:260, baseCps:9, level:0},
+      {id:'u7', name:"Jalapeño Batter Spinner", baseCost:420, baseCps:14, level:0},
+      {id:'u8', name:"La Comal Roja", baseCost:700, baseCps:22, level:0},
+      {id:'u9', name:"Corn Grinding Stone", baseCost:1150, baseCps:34, level:0},
+      {id:'u10', name:"El Mercado Stove Permit", baseCost:1800, baseCps:52, level:0},
+      {id:'u11', name:"Cornbread Assembly Line", baseCost:2800, baseCps:78, level:0},
+      {id:'u12', name:"Oven #2 – El Fuego", baseCost:4200, baseCps:110, level:0},
+      {id:'u13', name:"Festival Stand", baseCost:6500, baseCps:170, level:0},
+      {id:'u14', name:"Cornbread Laboratory", baseCost:9800, baseCps:260, level:0},
+      {id:'u15', name:"Mega Mixer 3000", baseCost:15000, baseCps:380, level:0},
+      {id:'u16', name:"Corn Oil Reactor", baseCost:22000, baseCps:540, level:0},
+      {id:'u17', name:"Panadería Franchise", baseCost:32000, baseCps:780, level:0},
+      {id:'u18', name:"Cornbread Cathedral", baseCost:46000, baseCps:1100, level:0},
+      {id:'u19', name:"Interdimensional Corn Portal", baseCost:68000, baseCps:1600, level:0},
+      {id:'u20', name:"Cosmic Batter Pool", baseCost:100000, baseCps:2300, level:0},
+      {id:'u21', name:"Spiritual Corn Totem", baseCost:150000, baseCps:3400, level:0},
+      {id:'u22', name:"Cornbread Reality Splitter", baseCost:220000, baseCps:4900, level:0},
+      {id:'u23', name:"Quantum Corn Mill", baseCost:330000, baseCps:7000, level:0},
+      {id:'u24', name:"Galactic Pan Oven", baseCost:480000, baseCps:9800, level:0},
+      {id:'u25', name:"Cornbread Wormhole Generator", baseCost:700000, baseCps:14000, level:0},
+      {id:'u26', name:"Nebula Spice Machine", baseCost:1000000, baseCps:20000, level:0},
+      {id:'u27', name:"Astral Batter Accelerator", baseCost:1400000, baseCps:28000, level:0},
+      {id:'u28', name:"Cornbread Dimension Farm", baseCost:2000000, baseCps:40000, level:0},
+      {id:'u29', name:"Empanada Titan Forge", baseCost:2800000, baseCps:56000, level:0},
+      {id:'u30', name:"Eternal Dough Reactor", baseCost:4000000, baseCps:76000, level:0},
+      {id:'u31', name:"Cornbread Oracle Shrine", baseCost:6000000, baseCps:105000, level:0},
+      {id:'u32', name:"Multiverse Pan Network", baseCost:9000000, baseCps:150000, level:0},
+      {id:'u33', name:"Infinite Batter River", baseCost:13000000, baseCps:215000, level:0},
+      {id:'u34', name:"Omega Corn Mill", baseCost:19000000, baseCps:310000, level:0},
+      {id:'u35', name:"Solar Bread Furnace", baseCost:27000000, baseCps:440000, level:0},
+      {id:'u36', name:"Hypernova Oven", baseCost:38000000, baseCps:620000, level:0},
+      {id:'u37', name:"Eldritch Crust Pit", baseCost:52000000, baseCps:870000, level:0},
+      {id:'u38', name:"Prime Dough Engine", baseCost:72000000, baseCps:1220000, level:0},
+      {id:'u39', name:"Alien Corn Harvester", baseCost:100000000, baseCps:1700000, level:0},
+      {id:'u40', name:"Ancient Cornbread Monolith", baseCost:140000000, baseCps:2350000, level:0},
+      {id:'u41', name:"Dark Matter Mixer", baseCost:200000000, baseCps:3250000, level:0},
+      {id:'u42', name:"Galactic Street Vendor", baseCost:300000000, baseCps:4500000, level:0},
+      {id:'u43', name:"Cornbread Planet Factory", baseCost:450000000, baseCps:6200000, level:0},
+      {id:'u44', name:"Omniversal Dough Reactor", baseCost:700000000, baseCps:8800000, level:0},
+      {id:'u45', name:"Infinity Pan Generator", baseCost:1000000000, baseCps:12500000, level:0},
+      {id:'u46', name:"Transcendent Batter Forge", baseCost:1500000000, baseCps:18000000, level:0},
+      {id:'u47', name:"Cornbread God Core", baseCost:2200000000, baseCps:26000000, level:0},
+      {id:'u48', name:"The Eternal Loafmaker", baseCost:3200000000, baseCps:38000000, level:0},
+      {id:'u49', name:"Ultimate Pan Dulce Engine", baseCost:4700000000, baseCps:55000000, level:0},
+      {id:'u50', name:"The Legendary Abuela Oven", baseCost:7000000000, baseCps:80000000, level:0}
+    ];
   }
-})();
 
-// if saved had levels, merge
-if (saved.upgrades && Array.isArray(saved.upgrades)) {
-  const byId = {};
-  saved.upgrades.forEach(s => byId[s.id] = s);
-  upgrades.forEach(u => { if (byId[u.id]) u.level = byId[u.id].level ?? u.level; });
-  cornbread = saved.cornbread ?? cornbread;
-  clickValue = saved.clickValue ?? clickValue;
-  totalEarned = saved.totalEarned ?? totalEarned;
-  legacy = saved.legacy ?? legacy;
-  lastTick = saved.lastTick ?? lastTick;
-}
-
-// cost formula
-function costFor(u) {
-  return Math.max(1, Math.floor(u.baseCost * Math.pow(1.15, u.level)));
-}
-
-// compute CPS (with legacy bonus)
-function computeBaseCPS() {
-  return upgrades.reduce((sum,u)=> u.type==='auto' ? sum + u.baseValue * u.level : sum, 0);
-}
-function computeCPS() {
-  const base = computeBaseCPS();
-  const bonus = 1 + (legacy * 0.01); // each legacy = +1% CPS
-  return base * bonus;
-}
-
-const upgradesDiv = document.getElementById('upgrades');
-const counterEl = document.getElementById('cornbreadCounter');
-const cpsEl = document.getElementById('cpsCounter');
-const legacyValEl = document.getElementById('legacyVal');
-const legacyBonusEl = document.getElementById('legacyBonus');
-const ascendGainEl = document.getElementById('ascendGain');
-const tooltip = document.getElementById('tooltip');
-
-function pretty(n) {
-  if (n === 0) return '0';
-  const abs = Math.abs(n);
-  if (abs >= 1e12) return (n/1e12).toFixed(2) + 'T';
-  if (abs >= 1e9) return (n/1e9).toFixed(2) + 'B';
-  if (abs >= 1e6) return (n/1e6).toFixed(2) + 'M';
-  if (abs >= 1e3) return (n/1e3).toFixed(2) + 'k';
-  return Math.floor(n).toString();
-}
-
-// save
-function saveState() {
-  const st = {
-    cornbread,
-    clickValue,
-    totalEarned,
-    legacy,
-    lastTick: Date.now(),
-    upgrades
-  };
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(st)); } catch(e){}
-}
-
-// render upgrades with tooltip listeners and buy behaviour supporting buyMode
-function renderUpgrades() {
-  upgradesDiv.innerHTML = '';
-  upgrades.forEach((u, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'upgradeButton';
-    const nextCost = costFor(u);
-    let label = `${u.name} — Lv ${u.level} — `;
-    if (u.type === 'auto') label += `+${pretty(u.baseValue * u.level)}/s`;
-    else label += `+${pretty(u.baseValue * u.level)} per click`;
-    btn.innerHTML = `<strong style="display:block">${label}</strong><span class="small">Next: ${pretty(nextCost)}</span>`;
-    btn.disabled = cornbread < nextCost;
-    // click behaviour respects buyMode
-    btn.addEventListener('click', ()=> {
-      const mode = buyModeEl.value;
-      if (mode === '1') buyMany(i,1);
-      else if (mode === '10') buyMany(i,10);
-      else buyMax(i);
-    });
-    // tooltip show
-    btn.addEventListener('mouseenter', (ev)=>{
-      showTooltipFor(u, ev);
-    });
-    btn.addEventListener('mousemove', (ev)=> { positionTooltip(ev); });
-    btn.addEventListener('mouseleave', ()=> { hideTooltip(); });
-    upgradesDiv.appendChild(btn);
-  });
-}
-
-// buy single level
-function buyOne(i) {
-  const u = upgrades[i];
-  const price = costFor(u);
-  if (cornbread < price) return false;
-  cornbread -= price;
-  u.level += 1;
-  if (u.type === 'click') clickValue += u.baseValue;
-  totalEarned += price;
-  return true;
-}
-
-// buy N levels (one-by-one)
-function buyMany(i, n) {
-  for (let k=0;k<n;k++){
-    if (!buyOne(i)) break;
+  /* Helpers */
+  function fmt(n){
+    n = Number(n);
+    if(isNaN(n)) return '0';
+    if(n >= 1e12) return (n/1e12).toFixed(2) + 'T';
+    if(n >= 1e9) return (n/1e9).toFixed(2) + 'B';
+    if(n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if(n >= 1e3) return (n/1e3).toFixed(2) + 'k';
+    return Math.floor(n).toString();
   }
-  updateCounter();
-  saveState();
-}
 
-// buy max levels until can't afford
-function buyMax(i) {
-  let bought = 0;
-  while (true) {
+  function costFor(u){
+    return Math.max(1, Math.floor(u.baseCost * Math.pow(1.15, u.level)));
+  }
+
+  function computeBaseCps(){
+    return upgrades.reduce((s,u) => s + u.baseCps * (u.level || 0), 0);
+  }
+  function computeTotalCps(){
+    return computeBaseCps() * (1 + batterPoints*0.02);
+  }
+
+  /* UI & Buttons Rendering */
+  const upgradesDiv = document.getElementById('upgrades');
+  const counterEl = document.getElementById('cornbreadCounter');
+  const cpsEl = document.getElementById('cpsCounter');
+  const batterPointsEl = document.getElementById('batterPoints');
+  const batterBonusEl = document.getElementById('batterBonus');
+  const ascendGainEl = document.getElementById('ascendGain');
+  const tooltip = document.getElementById('tooltip');
+  const notifier = document.getElementById('notifier');
+  const goldenBtn = document.getElementById('golden');
+  const factStrip = document.getElementById('factStrip');
+
+  const FACTS = [
+    "Mexican cornbread can be juicy if made with cream‑style corn.",
+    "Traditional recipes often include jalapeños for a spicy kick.",
+    "Cornbread is a staple in many Mexican kitchens.",
+    "Street vendors sometimes bake cornbread fresh in clay ovens.",
+    "The secret to fluffy cornbread? Let the batter rest overnight."
+  ];
+
+  function save(){
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      cornbread, clickValue, totalEarned, batterPoints, lastTick: Date.now(), upgrades
+    }));
+  }
+
+  function notify(msg, time=3200){
+    const el = document.createElement('div');
+    el.className = 'notify';
+    el.textContent = msg;
+    notifier.appendChild(el);
+    setTimeout(()=> el.remove(), time);
+  }
+
+  function showTooltip(u, ev){
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<b>${u.name}</b><div style="margin-top:6px">Level: ${u.level || 0}</div>
+      <div style="margin-top:6px">+${fmt(u.baseCps)} CPS per level</div>
+      <div style="margin-top:6px">Next cost: <b>${fmt(costFor(u))}</b></div>`;
+    moveTooltip(ev);
+  }
+  function moveTooltip(ev){
+    const pad = 12;
+    tooltip.style.left = (ev.clientX + pad)+'px';
+    tooltip.style.top  = (ev.clientY + pad)+'px';
+  }
+  function hideTooltip(){ tooltip.style.display = 'none'; }
+
+  function renderUpgrades(){
+    upgradesDiv.innerHTML = '';
+    upgrades.forEach((u, i) => {
+      const btn = document.createElement('div');
+      const affordable = cornbread >= costFor(u);
+      btn.className = 'upgrade-btn' + (affordable ? '' : ' disabled');
+      btn.id = 'upg_'+u.id;
+      btn.innerHTML = `
+        <img class="upgrade-icon" src="${ICON_URL}">
+        <div style="flex:1">
+          <div class="upgrade-text"><strong>${u.name}</strong></div>
+          <div class="upgrade-sub">Lvl ${u.level || 0} • +${fmt(u.baseCps)} CPS/level</div>
+        </div>
+        <div style="min-width:110px;text-align:right">
+          <div style="font-weight:bold">${fmt(costFor(u))}</div>
+          <div style="font-size:11px;color:#444">Owned: ${u.level || 0}</div>
+        </div>
+      `;
+      if(affordable){
+        btn.addEventListener('click', ()=> buyUpgrade(i, buyMode.value === 'max' ? Infinity : Number(buyMode.value)));
+      }
+      btn.addEventListener('mouseenter', showTooltip.bind(null,u));
+      btn.addEventListener('mousemove', moveTooltip);
+      btn.addEventListener('mouseleave', hideTooltip);
+      upgradesDiv.appendChild(btn);
+    });
+    updateStats();
+  }
+
+  function buyUpgrade(i, times=1){
     const u = upgrades[i];
-    const price = costFor(u);
-    if (cornbread >= price) {
-      cornbread -= price;
-      u.level += 1;
-      if (u.type === 'click') clickValue += u.baseValue;
-      totalEarned += price;
+    let bought = 0;
+    while(bought < times){
+      const cost = costFor(u);
+      if(cornbread < cost) break;
+      cornbread -= cost;
+      u.level = (u.level || 0) + 1;
+      totalEarned += cost;
       bought++;
-    } else break;
-    // safety guard
-    if (bought > 1000000) break;
+    }
+    if(bought) notify(`Bought ${bought} x ${u.name}`);
+    renderUpgrades();
+    save();
   }
-  updateCounter();
-  saveState();
-}
 
-// clicking cornbread
-document.getElementById('clickCornbread').addEventListener('click', ()=>{
-  cornbread += clickValue;
-  totalEarned += clickValue;
-  updateCounter();
-  saveState();
-});
+  function updateStats(){
+    counterEl.textContent = `Cornbread: ${fmt(Math.floor(cornbread))}`;
+    cpsEl.textContent = `Cornbread/sec: ${fmt(Math.floor(computeTotalCps()))}`;
+    batterPointsEl.textContent = batterPoints;
+    batterBonusEl.textContent = `+${batterPoints*2}%`;
+    ascendGainEl.textContent = Math.floor(Math.sqrt(totalEarned / 10000));
+  }
 
-// tick handling (accounts for time passed)
-function tick() {
-  const now = Date.now();
-  const dt = Math.max(0, now - lastTick) / 1000;
-  lastTick = now;
-  const cps = computeCPS();
-  cornbread += cps * dt;
-  totalEarned += cps * dt;
-  updateCounter();
-  saveState();
-}
+  // main click
+  document.getElementById('clickCornbread').addEventListener('click', ()=>{
+    cornbread += clickValue;
+    totalEarned += clickValue;
+    spawnFloat(`+${fmt(clickValue)}`);
+    spawnCrumbs(6);
+    renderUpgrades();
+    save();
+  });
 
-function updateCounter() {
-  counterEl.textContent = `Cornbread: ${pretty(Math.floor(cornbread))}`;
-  cpsEl.textContent = `Cornbread/sec: ${pretty(computeCPS())}`;
-  legacyValEl.textContent = legacy;
-  legacyBonusEl.textContent = `+${legacy}%`;
-  // compute ascend hypothetical gain
-  const gain = Math.floor(Math.sqrt(totalEarned / 10000)); // tuned: sqrt(total/10k)
-  ascendGainEl.textContent = gain;
+  function spawnFloat(text, dur=1){
+    const el = document.createElement('div');
+    el.className = 'float-num';
+    el.textContent = text;
+    document.body.appendChild(el);
+    const rect = document.getElementById('clickCornbread').getBoundingClientRect();
+    const startX = rect.left + rect.width/2 + (Math.random()*40-20);
+    const startY = rect.top + (Math.random()*20-10);
+    el.style.left = startX+'px';
+    el.style.top = startY+'px';
+    let start = performance.now();
+    function anim(t){
+      const p = (t-start)/(dur*1000);
+      el.style.transform = `translateY(${-p*60}px)`;
+      el.style.opacity = String(1-p);
+      if(p<1) requestAnimationFrame(anim);
+      else el.remove();
+    }
+    requestAnimationFrame(anim);
+  }
+
+  function spawnCrumbs(n){
+    const rect = document.getElementById('clickCornbread').getBoundingClientRect();
+    for(let i=0;i<n;i++){
+      const c = document.createElement('div');
+      c.className = 'crumb';
+      document.body.appendChild(c);
+      let x = rect.left + rect.width/2;
+      let y = rect.top + rect.height/2;
+      c.style.left = x+'px';
+      c.style.top = y+'px';
+      const angle = Math.random()*Math.PI*2;
+      const speed = 40 + Math.random()*80;
+      const vx = Math.cos(angle)*speed;
+      const vy = Math.sin(angle)*speed;
+      let t0 = performance.now();
+      function step(t){
+        const dt = (t - t0)/1000; t0 = t;
+        x += vx * dt;
+        y += vy * dt + dt * 120; // gravity
+        c.style.left = x+'px';
+        c.style.top = y+'px';
+        c.style.opacity = String(parseFloat(c.style.opacity)-0.02);
+        if(parseFloat(c.style.opacity)>0) requestAnimationFrame(step);
+        else c.remove();
+      }
+      requestAnimationFrame(step);
+    }
+  }
+
+  /* Golden Cornbread random event */
+  function scheduleGolden(){
+    const secs = GOLDEN_MIN_SECONDS + Math.random()*(GOLDEN_MAX_SECONDS - GOLDEN_MIN_SECONDS);
+    setTimeout(spawnGolden, secs*1000);
+  }
+  function spawnGolden(){
+    goldenBtn.style.display = 'block';
+    goldenBtn.textContent = '✨ Golden Cornbread ✨';
+    const x = 80 + Math.random()*(window.innerWidth-160);
+    const y = 80 + Math.random()*(window.innerHeight-160);
+    goldenBtn.style.left = x+'px';
+    goldenBtn.style.top = y+'px';
+    goldenBtn.onclick = activateGolden;
+    setTimeout(()=>{ goldenBtn.style.display = 'none'; scheduleGolden(); }, GOLDEN_TTL);
+  }
+  function activateGolden(){
+    goldenBtn.style.display = 'none';
+    if(Math.random()<0.5){
+      // instant reward
+      const reward = Math.floor(5000 + Math.random()*500000);
+      cornbread += reward;
+      totalEarned += reward;
+      spawnFloat(`+${fmt(reward)}`,1.4);
+      notify(`Golden Cornbread! +${fmt(reward)} cornbread!`);
+    } else {
+      // temporary x10 CPS for 15s
+      const bonus = computeTotalCps() * (GOLDEN_CLICK_MULT - 1);
+      const start = Date.now();
+      notify(`Golden Cornbread! CPS ×${GOLDEN_CLICK_MULT} for 15 seconds!`);
+      const intv = setInterval(()=>{
+        const now = Date.now();
+        if(now - start > 15000) { clearInterval(intv); return; }
+        cornbread += bonus/10; totalEarned += bonus/10;
+      }, 100);
+    }
+    scheduleGolden();
+  }
+  scheduleGolden();
+
+  /* Ascend (prestige) */
+  document.getElementById('ascendBtn').addEventListener('click', ()=>{
+    const gain = Math.floor(Math.sqrt(totalEarned / 10000));
+    if(gain <= 0) { alert("You need more cornbread to get Batter Points!"); return; }
+    if(!confirm(`Ascend now to gain ${gain} Batter Points (+2% CPS each)? This will reset progress.`)) return;
+    batterPoints += gain;
+    cornbread = 0; clickValue = 1; totalEarned = 0;
+    upgrades.forEach(u => u.level = 0);
+    lastTick = Date.now();
+    save();
+    renderUpgrades();
+    notify(`Ascended! Gained ${gain} Batter Points.`);
+  });
+
+  /* Facts rotation */
+  setInterval(()=>{
+    factStrip.textContent = "Did you know? " + FACTS[Math.floor(Math.random()*FACTS.length)];
+  }, 30000);
+
+  /* Save loop & main tick */
+  function tick(){
+    const now = Date.now();
+    const dt = Math.max(0, now - lastTick)/1000;
+    lastTick = now;
+    const gain = computeTotalCps() * dt;
+    cornbread += gain;
+    totalEarned += gain;
+    updateStats();
+    save();
+  }
+  setInterval(tick, 1000);
+
+  /* initial render */
   renderUpgrades();
-}
+  updateStats();
+  </script>
 
-// tooltip helpers
-function showTooltipFor(u, ev) {
-  const nextCost = costFor(u);
-  const effect = u.type === 'auto' ? `Produces ${pretty(u.baseValue)} CPS per level` : `Adds ${pretty(u.baseValue)} click power per purchase`;
-  tooltip.innerHTML = `<b>${u.name}</b><div style="margin-top:6px">${u.type==='auto'?'Auto (building)':'Click upgrade'}</div><div style="margin-top:6px">Level: ${u.level}</div><div style="margin-top:6px">${effect}</div><div style="margin-top:6px">Base cost: ${pretty(u.baseCost)}</div><div style="margin-top:6px">Next cost: <b>${pretty(nextCost)}</b></div>`;
-  tooltip.style.display = 'block';
-  positionTooltip(ev);
-}
-function positionTooltip(ev) {
-  const pad = 12;
-  let x = ev.clientX + pad;
-  let y = ev.clientY + pad;
-  // keep inside viewport
-  const rect = tooltip.getBoundingClientRect();
-  if (x + rect.width > window.innerWidth) x = ev.clientX - rect.width - pad;
-  if (y + rect.height > window.innerHeight) y = ev.clientY - rect.height - pad;
-  tooltip.style.left = x + 'px';
-  tooltip.style.top = y + 'px';
-}
-function hideTooltip(){ tooltip.style.display = 'none'; }
-
-// Ascend logic: calculate gain from totalEarned; confirm resets most progress but keeps legacy
-const ascendBtn = document.getElementById('ascendBtn');
-const confirmAscendBtn = document.getElementById('confirmAscend');
-ascendBtn.addEventListener('click', ()=> {
-  const gain = Math.floor(Math.sqrt(totalEarned / 10000));
-  alert(`If you ascend now you will earn ${gain} Legacy point(s). Ascend will reset most progress but keep Legacy points.`);
-});
-confirmAscendBtn.addEventListener('click', ()=> {
-  const gain = Math.floor(Math.sqrt(totalEarned / 10000));
-  if (gain <= 0) { alert("You don't earn any Legacy points yet. Keep earning more Cornbread!"); return; }
-  if (!confirm(`Ascend now? You will earn ${gain} Legacy point(s) and reset your progress.`)) return;
-  // apply legacy and reset core progress but preserve legacy and legacy bonus
-  legacy += gain;
-  // reset cornbread, clickValue, totalEarned, upgrade levels to 0
-  cornbread = 0;
-  clickValue = 1;
-  totalEarned = 0;
-  upgrades.forEach(u => u.level = 0);
-  lastTick = Date.now();
-  saveState();
-  updateCounter();
-  alert(`Ascended! You gained ${gain} Legacy point(s).`);
-});
-
-// Reset save button
-document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if (!confirm('Reset your save completely? This cannot be undone.')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  location.reload();
-});
-
-// quick save & init
-updateCounter();
-setInterval(tick, 1000);
-setInterval(saveState, 5000);
-
-// --------------------- AI Chat (unchanged) ---------------------
-const aiChatTab = document.getElementById("aiChatTab");
-const toggleAIChat = document.getElementById("toggleAIChat");
-const chatContent = document.getElementById("chatContent");
-const chatLog = document.getElementById("chatLog");
-const chatInput = document.getElementById("chatInput");
-const sendChat = document.getElementById("sendChat");
-toggleAIChat && toggleAIChat.addEventListener("click", ()=>{ chatContent.style.display = chatContent.style.display==="none"?"block":"none"; });
-
-setInterval(()=>{
-  const ultra = upgrades.find(u=>u.id==='click2' || u.name==='Ultra Click');
-  if (ultra && ultra.level > 10) aiChatTab.style.display="block";
-},1000);
-
-let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
-
-async function sendMessage(msg){
-  if(!msg) return;
-  chatHistory.push({role:'user',content:msg});
-  const loadingDiv = document.createElement('div');
-  loadingDiv.textContent = "AI is thinking...";
-  chatLog.appendChild(loadingDiv);
-  chatLog.scrollTop = chatLog.scrollHeight;
-
-  try {
-    const resp = await fetch('broken-pine-f57b.sharpmason233.workers.dev', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:chatHistory})
-    });
-    const data = await resp.json();
-    chatHistory.push({role:'assistant',content:data.reply});
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-    loadingDiv.remove();
-    const userDiv=document.createElement('div'); userDiv.textContent='You: '+msg; userDiv.style.fontWeight='bold';
-    const botDiv=document.createElement('div'); botDiv.textContent='AI: '+data.reply;
-    chatLog.appendChild(userDiv); chatLog.appendChild(botDiv);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  } catch(err){
-    console.error(err);
-    loadingDiv.textContent="Error contacting AI bot.";
-  }
-}
-
-sendChat && sendChat.addEventListener('click', ()=>{
-  const msg = chatInput.value.trim();
-  if(msg==='') return;
-  sendMessage(msg);
-  chatInput.value='';
-});
-chatInput && chatInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendChat.click(); });
-
-// tooltip hides on scroll or resize
-window.addEventListener('scroll', hideTooltip);
-window.addEventListener('resize', hideTooltip);
-
-// draggable chat
-dragElement(aiChatTab, toggleAIChat);
-function dragElement(elmnt, header) {
-  if(!elmnt) return;
-  let pos1=0,pos2=0,pos3=0,pos4=0;
-  if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
-  function dragMouseDown(e){ e=e||window.event; e.preventDefault(); pos3=e.clientX; pos4=e.clientY; document.onmouseup=closeDragElement; document.onmousemove=elementDrag; }
-  function elementDrag(e){ e=e||window.event; e.preventDefault(); pos1=pos3-e.clientX; pos2=pos4-e.clientY; pos3=e.clientX; pos4=e.clientY; elmnt.style.top=(elmnt.offsetTop-pos2)+"px"; elmnt.style.left=(elmnt.offsetLeft-pos1)+"px"; }
-  function closeDragElement(){ document.onmouseup=null; document.onmousemove=null; }
-}
-</script>
 </body>
 </html>
 
