@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --bg:#fdf6e3; --accent:#c0392b; --panel:#fff8e1;
+  }
   body {
     font-family: 'Press Start 2P', cursive;
-    background-color: #fdf6e3;
-    color: #c0392b;
+    background-color: var(--bg);
+    color: var(--accent);
     margin: 0;
     padding: 20px;
     display: flex;
@@ -18,83 +21,82 @@
     flex-wrap: wrap;
   }
   #left, #right { padding: 10px; }
-  #left {
-    flex: 1;
-    min-width: 300px;
-    max-width: 600px;
-    text-align: center;
-  }
+  #left { flex: 1; min-width: 300px; max-width: 600px; text-align: center; }
   h1 { font-size: 24px; margin: 10px 0; }
   #serverIP { font-size: 18px; margin: 5px 0; }
   #recipe {
-    font-family: 'Comic Sans MS', cursive;
-    font-size: 16px;
-    color: black;
-    text-align: left;
-    background-color: #fff8e1;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    border: 3px solid red;
-    margin-top: 20px;
+    font-family:'Comic Sans MS', cursive;
+    font-size:16px;
+    color:black;
+    text-align:left;
+    background-color:var(--panel);
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    border:3px solid var(--accent);
+    margin-top:20px;
   }
   img {
     height: auto;
     border-radius: 10px;
-    border: 3px solid red;
-    transition: transform 0.2s;
+    border: 3px solid var(--accent);
+    transition: transform 0.15s;
     display: block;
     margin: 10px auto;
   }
   img:hover { transform: scale(1.05); }
   #right {
-    flex: 0 0 400px;
-    background-color: #fff8e1;
-    border-radius: 10px;
-    padding: 20px;
-    margin-left: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    text-align: center;
-    border: 3px solid red;
-    min-width: 300px;
-  }
-  #cornbreadCounter { font-size: 18px; margin-bottom: 5px; }
-  #cpsCounter { font-size: 14px; margin-bottom: 20px; }
-  .upgradeButton {
-    display: block;
-    margin: 5px auto;
-    padding: 10px;
-    font-size: 14px;
-    font-family: 'Comic Sans MS', cursive;
-    color: black;
-    width: 90%;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 2px solid #c0392b;
-    background-color: #fdf6e3;
-    transition: 0.2s;
-  }
-  .upgradeButton:hover:not(:disabled){ background-color: #c0392b; color:white; }
-  .upgradeButton:disabled{ opacity:0.5; cursor:not-allowed; }
-  #aiChatTab {
-    display:none;
-    position:fixed;
-    top:50px;
-    right:20px;
-    width:300px;
-    background:#fff8e1;
-    border:3px solid red;
+    flex: 0 0 440px;
+    background-color:var(--panel);
     border-radius:10px;
-    padding:10px;
+    padding:20px;
+    margin-left:20px;
     box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    z-index:100;
+    text-align:center;
+    border:3px solid var(--accent);
+    min-width: 320px;
   }
+  #cornbreadCounter { font-size:18px; margin-bottom:5px; }
+  #cpsCounter { font-size:14px; margin-bottom:10px; }
+  #legacyRow { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; }
+  #legacyPoints { font-size:12px; color:#333; }
+  .controlRow { display:flex; gap:8px; justify-content:center; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
+  select, button.smallBtn {
+    font-family:'Comic Sans MS', cursive; font-size:12px; padding:6px 8px; border-radius:6px; border:2px solid var(--accent);
+    background:var(--bg); cursor:pointer;
+  }
+  .smallBtn:disabled{ opacity:0.5; cursor:not-allowed; }
+  .upgradeButton {
+    display:block; margin:6px auto;
+    padding:10px;
+    font-size:12px;
+    font-family:'Comic Sans MS', cursive;
+    color:black; width:96%; cursor:pointer;
+    border-radius:6px; border:2px solid #c0392b;
+    background-color:var(--bg); transition:0.12s;
+    text-align:left;
+    position:relative;
+  }
+  .upgradeButton:hover:not(:disabled){ background-color:#c0392b; color:white; transform:translateY(-2px); }
+  .upgradeButton:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+  #upgrades { max-height: 420px; overflow:auto; padding-bottom:6px; }
+  .small { font-size:10px; color:#333; display:block; margin-top:4px; }
+  /* tooltip */
+  .tooltip {
+    position:fixed; pointer-events:none; background:#fff; color:#000; border-radius:6px; padding:8px; box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    border:2px solid var(--accent); font-family:'Comic Sans MS',cursive; font-size:12px; z-index:9999; display:none;
+    max-width:260px;
+  }
+  .tooltip b{ color:var(--accent); }
+  /* ascend modal strip */
+  #ascendBox { margin-top:12px; padding:8px; background:#fff; border-radius:6px; border:2px dashed #c0392b; color:#111; }
+  #aiChatTab { display:none; position:fixed; top:50px; right:20px; width:300px; background:var(--panel); border:3px solid var(--accent); border-radius:10px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:100; }
   #chatContent { display:none; font-family:'Comic Sans MS', cursive; font-size:14px; color:black; }
-  #chatLog { height:200px; overflow-y:auto; border:1px solid #c0392b; padding:5px; margin-bottom:5px; background:white; }
+  #chatLog { height:200px; overflow-y:auto; border:1px solid var(--accent); padding:5px; margin-bottom:5px; background:white; }
   #chatInput { width:calc(100% - 10px); padding:5px; font-family:'Comic Sans MS', cursive; font-size:14px; }
   @media(max-width:800px){
     body{ flex-direction: column; align-items:center; }
-    #right{ margin-left:0; margin-top:20px; }
+    #right{ margin-left:0; margin-top:20px; width:92%; }
   }
 </style>
 </head>
@@ -106,15 +108,13 @@
   <p>Status: <span id="status">Loading...</span></p>
   <p>Players: <span id="players">0 / 0</span></p>
 
-  <!-- Center Cornbread Image CLICKABLE, original size -->
+  <!-- Center Cornbread Image CLICKABLE -->
   <a href="https://southernbite.com/moms-mexican-cornbread-the-national-cornbread-cook-off/" target="_blank">
-    <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
+    <img id="mainCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
   </a>
 
-  <!-- Shoenice GIF -->
+  <!-- GIFs -->
   <img src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" alt="Animated Cornbread GIF 1" width="300">
-
-  <!-- Pink Guy GIF resized to match Shoenice GIF -->
   <img src="https://64.media.tumblr.com/0975771a0de36698e06cf2d2a0ce4b3b/tumblr_ml8ihl8v1B1s4rkemo4_250.gif" alt="Animated Cornbread GIF 2" width="300">
 
   <div id="recipe">
@@ -139,8 +139,37 @@
   <h2>Cornbread Clicker</h2>
   <p id="cornbreadCounter">Cornbread: 0</p>
   <p id="cpsCounter">Cornbread/sec: 0</p>
-  <img id="clickCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Click Cornbread" width="150">
+
+  <div id="legacyRow">
+    <div id="legacyPoints">Legacy: <span id="legacyVal">0</span> (<span id="legacyBonus">+0%</span> CPS)</div>
+    <div>
+      <button id="ascendBtn" class="smallBtn">Ascend</button>
+    </div>
+  </div>
+
+  <div class="controlRow">
+    <label style="font-size:11px;color:#333;">Buy mode:</label>
+    <select id="buyMode">
+      <option value="1">x1</option>
+      <option value="10">x10</option>
+      <option value="max">Max</option>
+    </select>
+    <button id="resetBtn" class="smallBtn">Reset Save</button>
+  </div>
+
+  <div class="controlRow">
+    <img id="clickCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Click Cornbread" width="150" style="cursor:pointer">
+  </div>
+
   <div id="upgrades"></div>
+
+  <div id="ascendBox">
+    <div style="font-size:12px;margin-bottom:6px;color:#333">Ascend to earn Legacy Points. Each Legacy point gives +1% CPS permanently.</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="font-size:12px;color:#333">You would earn: <strong id="ascendGain">0</strong></div>
+      <button id="confirmAscend" class="smallBtn">Confirm Ascend</button>
+    </div>
+  </div>
 </div>
 
 <div id="aiChatTab">
@@ -152,8 +181,10 @@
   </div>
 </div>
 
+<div class="tooltip" id="tooltip"></div>
+
 <script>
-// --- Server Status ---
+// --------------------- Server Status ---------------------
 async function updateStatus() {
   const ip = "gangrene.mexicancornbread.org";
   const url = `https://api.mcsrvstat.us/2/${ip}`;
@@ -161,113 +192,383 @@ async function updateStatus() {
     const response = await fetch(url);
     const data = await response.json();
     document.getElementById("status").textContent = data.online ? "Online" : "Offline";
-    document.getElementById("players").textContent =
-      data.players?.online != null && data.players?.max != null
-      ? `${data.players.online} / ${data.players.max}`
-      : "0 / 0";
-  } catch { document.getElementById("status").textContent = "Error"; }
+    document.getElementById("players").textContent = data.players?.online != null && data.players?.max != null ? `${data.players.online} / ${data.players.max}` : "0 / 0";
+  } catch (err) { console.error(err); document.getElementById("status").textContent = "Error"; }
 }
 updateStatus(); setInterval(updateStatus,30000);
 
-// --- Cornbread Clicker ---
-let cornbread = Number(localStorage.getItem('cornbread')) || 0;
-let clickValue = Number(localStorage.getItem('clickValue')) || 1;
+// --------------------- Clicker + Upgrades + Prestige ---------------------
+const STORAGE_KEY = 'cornbread_clicker_v3';
+let saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
-let upgrades = [
-  {name:"Click Upgrade",type:"click",value:1,cost:10},
-  {name:"Ultra Click",type:"click",value:10,cost:1000},
-  {name:"Auto Cornbread",type:"auto",value:1,cost:50},
-  {name:"Cornbread Factory",type:"auto",value:5,cost:500},
-  {name:"Mega Click",type:"click",value:50,cost:5000},
-  {name:"Cornbread Farm",type:"auto",value:25,cost:2500},
-  {name:"Super Click",type:"click",value:100,cost:10000},
-  {name:"Cornbread Mill",type:"auto",value:100,cost:10000},
-  {name:"Ultra Factory",type:"auto",value:500,cost:50000},
-  {name:"Ultimate Click",type:"click",value:500,cost:50000},
-  {name:"Cornbread Empire",type:"auto",value:1000,cost:100000},
-  {name:"Hyper Click",type:"click",value:1000,cost:100000},
+// player state
+let cornbread = saved.cornbread ?? 0;
+let clickValue = saved.clickValue ?? 1;
+let totalEarned = saved.totalEarned ?? (saved.cornbread ?? 0); // used for ascend calculation
+let legacy = saved.legacy ?? 0; // legacy points
+let lastTick = saved.lastTick ?? Date.now();
+
+// buy mode
+const buyModeEl = document.getElementById('buyMode');
+
+// create upgrades array (same as prior 62-ish entries) - keep id stable so saves map correctly
+let upgrades = saved.upgrades || [
+  { id: "click1", name:"Finger Tap", type:"click", baseCost:10, baseValue:1, level:0 },
+  { id: "click2", name:"Double Tap", type:"click", baseCost:75, baseValue:2, level:0 },
+  { id: "click3", name:"Triple Tap", type:"click", baseCost:400, baseValue:5, level:0 },
+  { id: "cursor", name:"Cursor", type:"auto", baseCost:25, baseValue:0.1, level:0},
+  { id: "grandma", name:"Grandma", type:"auto", baseCost:100, baseValue:0.5, level:0},
+  { id: "farm", name:"Farm", type:"auto", baseCost:500, baseValue:2.0, level:0},
+  { id: "mine", name:"Mine", type:"auto", baseCost:3000, baseValue:8.0, level:0},
+  { id: "factory", name:"Factory", type:"auto", baseCost:10000, baseValue:30.0, level:0},
+  { id: "bank", name:"Bank", type:"auto", baseCost:40000, baseValue:100.0, level:0},
+  { id: "temple", name:"Temple", type:"auto", baseCost:200000, baseValue:500.0, level:0},
+  { id: "wizard", name:"Wizard Tower", type:"auto", baseCost:1000000, baseValue:3000.0, level:0},
+  { id: "click4", name:"Spicy Click", type:"click", baseCost:2500, baseValue:20, level:0},
+  { id: "click5", name:"Savory Click", type:"click", baseCost:25000, baseValue:150, level:0},
+  { id: "shipment", name:"Shipment", type:"auto", baseCost:5000000, baseValue:10000, level:0},
+  { id: "alchemy", name:"Alchemy Lab", type:"auto", baseCost:20000000, baseValue:60000, level:0},
+  { id: "portal", name:"Portal", type:"auto", baseCost:100000000, baseValue:300000, level:0},
+  { id: "timeMachine", name:"Time Machine", type:"auto", baseCost:1000000000, baseValue:2000000, level:0},
+  { id: "antimatter", name:"Antimatter Condenser", type:"auto", baseCost:1e10, baseValue:15000000, level:0},
+  { id: "prism", name:"Prism", type:"auto", baseCost:5e11, baseValue:100000000, level:0},
+  { id: "barn", name:"Barn", type:"auto", baseCost:2000, baseValue:6, level:0},
+  { id: "oven", name:"Oven", type:"auto", baseCost:8000, baseValue:25, level:0},
+  { id: "smelter", name:"Smelter", type:"auto", baseCost:22000, baseValue:80, level:0},
+  { id: "warehouse", name:"Warehouse", type:"auto", baseCost:70000, baseValue:250, level:0},
+  { id: "dock", name:"Dock", type:"auto", baseCost:180000, baseValue:450, level:0},
+  { id: "hangar", name:"Hangar", type:"auto", baseCost:450000, baseValue:1200, level:0},
+  { id: "foundry", name:"Foundry", type:"auto", baseCost:1100000, baseValue:3500, level:0},
+  { id: "lab", name:"Research Lab", type:"auto", baseCost:2800000, baseValue:9000, level:0},
+  { id: "observatory", name:"Observatory", type:"auto", baseCost:7500000, baseValue:26000, level:0},
+  { id: "stadium", name:"Stadium", type:"auto", baseCost:20000000, baseValue:78000, level:0},
+  { id: "resort", name:"Resort", type:"auto", baseCost:60000000, baseValue:240000, level:0},
+  { id: "spaceStation", name:"Space Station", type:"auto", baseCost:2e8, baseValue:900000, level:0},
+  { id: "galacticBank", name:"Galactic Bank", type:"auto", baseCost:8e8, baseValue:4e6, level:0},
+  { id: "quantumFarm", name:"Quantum Farm", type:"auto", baseCost:3e9, baseValue:15e6, level:0},
+  { id: "click6", name:"Savory Swipe", type:"click", baseCost:1e5, baseValue:800, level:0},
+  { id: "click7", name:"Golden Finger", type:"click", baseCost:5e6, baseValue:12000, level:0},
+  { id: "click8", name:"Legendary Tap", type:"click", baseCost:2e8, baseValue:300000, level:0},
+  { id: "hut", name:"Hut", type:"auto", baseCost:60, baseValue:0.4, level:0 },
+  { id: "workshop", name:"Workshop", type:"auto", baseCost:140, baseValue:1.2, level:0 },
+  { id: "bakery", name:"Bakery", type:"auto", baseCost:360, baseValue:2.6, level:0 },
+  { id: "silo", name:"Silo", type:"auto", baseCost:860, baseValue:5.4, level:0 },
+  { id: "mill", name:"Mill", type:"auto", baseCost:2200, baseValue:11, level:0 },
+  { id: "brewery", name:"Brewery", type:"auto", baseCost:4800, baseValue:24, level:0 },
+  { id: "distillery", name:"Distillery", type:"auto", baseCost:11000, baseValue:55, level:0 },
+  { id: "canning", name:"Canning Plant", type:"auto", baseCost:26000, baseValue:130, level:0 },
+  { id: "packhouse", name:"Packhouse", type:"auto", baseCost:64000, baseValue:320, level:0 },
+  { id: "distributor", name:"Distributor", type:"auto", baseCost:160000, baseValue:850, level:0 },
+  { id: "logistics", name:"Logistics Center", type:"auto", baseCost:420000, baseValue:2300, level:0 },
+  { id: "pipeline", name:"Pipeline", type:"auto", baseCost:1e6, baseValue:6200, level:0 },
+  { id: "reactor", name:"Reactor", type:"auto", baseCost:2.8e6, baseValue:18500, level:0 },
+  { id: "fusion", name:"Fusion Core", type:"auto", baseCost:8e6, baseValue:56000, level:0 },
+  { id: "terraform", name:"Terraformer", type:"auto", baseCost:2.4e7, baseValue:190000, level:0 },
+  { id: "dyson", name:"Dyson Swarm", type:"auto", baseCost:7.5e7, baseValue:700000, level:0 },
+  { id: "click9", name:"Celestial Click", type:"click", baseCost:5e9, baseValue:60e6, level:0 },
+  { id: "click10", name:"Singularity Tap", type:"click", baseCost:3e11, baseValue:2e9, level:0 },
+  { id: "singularity", name:"Singularity", type:"auto", baseCost:1e11, baseValue:8e8, level:0 },
+  { id: "multiverse", name:"Multiverse Hub", type:"auto", baseCost:5e12, baseValue:5e10, level:0 },
+  { id: "omniplant", name:"Omniplant", type:"auto", baseCost:2e14, baseValue:4e12, level:0 }
 ];
 
-const counter = document.getElementById("cornbreadCounter");
-const cpsCounter = document.getElementById("cpsCounter");
-const upgradesDiv = document.getElementById("upgrades");
-const clickCornbread = document.getElementById("clickCornbread");
+// Ensure we have 62 entries (fill if needed)
+(function ensureCount(){
+  const target = 62;
+  const names = ['Spice','Sauce','Crisp','Crunch','Buttery','Zesty','Smoky','Golden','Hot','Sweet','Sourdough','Baked'];
+  let idx = 0;
+  while (upgrades.length < target) {
+    const n = upgrades.length + 1;
+    upgrades.push({
+      id: 'filler' + n,
+      name: `${names[idx % names.length]} Unit ${n}`,
+      type: (n % 3 === 0) ? 'click' : 'auto',
+      baseCost: Math.round(50 * Math.pow(1.9, n/10)),
+      baseValue: +( (n % 3 === 0) ? (Math.pow(1.7, n/12)) : (Math.pow(1.6, n/10) ) ).toFixed(2),
+      level: 0
+    });
+    idx++;
+  }
+})();
 
-function updateCounter() {
-  counter.textContent = `Cornbread: ${cornbread}`;
-  const totalCPS = upgrades.filter(u => u.type === "auto").reduce((sum,u)=>sum+u.value,0);
-  cpsCounter.textContent = `Cornbread/sec: ${totalCPS}`;
+// if saved had levels, merge
+if (saved.upgrades && Array.isArray(saved.upgrades)) {
+  const byId = {};
+  saved.upgrades.forEach(s => byId[s.id] = s);
+  upgrades.forEach(u => { if (byId[u.id]) u.level = byId[u.id].level ?? u.level; });
+  cornbread = saved.cornbread ?? cornbread;
+  clickValue = saved.clickValue ?? clickValue;
+  totalEarned = saved.totalEarned ?? totalEarned;
+  legacy = saved.legacy ?? legacy;
+  lastTick = saved.lastTick ?? lastTick;
+}
 
-  upgradesDiv.innerHTML = "";
-  upgrades.forEach((u,i)=>{
-    const btn=document.createElement("button");
-    btn.className="upgradeButton";
-    btn.disabled=cornbread<u.cost;
-    btn.textContent=u.type==="auto"?`${u.name} (+${u.value}/sec) - Cost: ${u.cost}`:`${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
-    btn.onclick=()=>buyUpgrade(i);
+// cost formula
+function costFor(u) {
+  return Math.max(1, Math.floor(u.baseCost * Math.pow(1.15, u.level)));
+}
+
+// compute CPS (with legacy bonus)
+function computeBaseCPS() {
+  return upgrades.reduce((sum,u)=> u.type==='auto' ? sum + u.baseValue * u.level : sum, 0);
+}
+function computeCPS() {
+  const base = computeBaseCPS();
+  const bonus = 1 + (legacy * 0.01); // each legacy = +1% CPS
+  return base * bonus;
+}
+
+const upgradesDiv = document.getElementById('upgrades');
+const counterEl = document.getElementById('cornbreadCounter');
+const cpsEl = document.getElementById('cpsCounter');
+const legacyValEl = document.getElementById('legacyVal');
+const legacyBonusEl = document.getElementById('legacyBonus');
+const ascendGainEl = document.getElementById('ascendGain');
+const tooltip = document.getElementById('tooltip');
+
+function pretty(n) {
+  if (n === 0) return '0';
+  const abs = Math.abs(n);
+  if (abs >= 1e12) return (n/1e12).toFixed(2) + 'T';
+  if (abs >= 1e9) return (n/1e9).toFixed(2) + 'B';
+  if (abs >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (abs >= 1e3) return (n/1e3).toFixed(2) + 'k';
+  return Math.floor(n).toString();
+}
+
+// save
+function saveState() {
+  const st = {
+    cornbread,
+    clickValue,
+    totalEarned,
+    legacy,
+    lastTick: Date.now(),
+    upgrades
+  };
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(st)); } catch(e){}
+}
+
+// render upgrades with tooltip listeners and buy behaviour supporting buyMode
+function renderUpgrades() {
+  upgradesDiv.innerHTML = '';
+  upgrades.forEach((u, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'upgradeButton';
+    const nextCost = costFor(u);
+    let label = `${u.name} — Lv ${u.level} — `;
+    if (u.type === 'auto') label += `+${pretty(u.baseValue * u.level)}/s`;
+    else label += `+${pretty(u.baseValue * u.level)} per click`;
+    btn.innerHTML = `<strong style="display:block">${label}</strong><span class="small">Next: ${pretty(nextCost)}</span>`;
+    btn.disabled = cornbread < nextCost;
+    // click behaviour respects buyMode
+    btn.addEventListener('click', ()=> {
+      const mode = buyModeEl.value;
+      if (mode === '1') buyMany(i,1);
+      else if (mode === '10') buyMany(i,10);
+      else buyMax(i);
+    });
+    // tooltip show
+    btn.addEventListener('mouseenter', (ev)=>{
+      showTooltipFor(u, ev);
+    });
+    btn.addEventListener('mousemove', (ev)=> { positionTooltip(ev); });
+    btn.addEventListener('mouseleave', ()=> { hideTooltip(); });
     upgradesDiv.appendChild(btn);
   });
-
-  localStorage.setItem('cornbread',cornbread);
-  localStorage.setItem('clickValue',clickValue);
 }
 
-function buyUpgrade(i){
-  const u=upgrades[i];
-  if(cornbread>=u.cost){
-    cornbread-=u.cost;
-    if(u.type==="click"){ clickValue+=u.value; u.value*=2; }
-    else{ u.value*=2; }
-    u.cost=Math.floor(u.cost*1.5);
-    updateCounter();
+// buy single level
+function buyOne(i) {
+  const u = upgrades[i];
+  const price = costFor(u);
+  if (cornbread < price) return false;
+  cornbread -= price;
+  u.level += 1;
+  if (u.type === 'click') clickValue += u.baseValue;
+  totalEarned += price;
+  return true;
+}
+
+// buy N levels (one-by-one)
+function buyMany(i, n) {
+  for (let k=0;k<n;k++){
+    if (!buyOne(i)) break;
   }
+  updateCounter();
+  saveState();
 }
 
-clickCornbread.onclick=()=>{ cornbread+=clickValue; updateCounter(); };
-setInterval(()=>{ upgrades.forEach(u=>{ if(u.type==="auto") cornbread+=u.value; }); updateCounter(); },1000);
+// buy max levels until can't afford
+function buyMax(i) {
+  let bought = 0;
+  while (true) {
+    const u = upgrades[i];
+    const price = costFor(u);
+    if (cornbread >= price) {
+      cornbread -= price;
+      u.level += 1;
+      if (u.type === 'click') clickValue += u.baseValue;
+      totalEarned += price;
+      bought++;
+    } else break;
+    // safety guard
+    if (bought > 1000000) break;
+  }
+  updateCounter();
+  saveState();
+}
+
+// clicking cornbread
+document.getElementById('clickCornbread').addEventListener('click', ()=>{
+  cornbread += clickValue;
+  totalEarned += clickValue;
+  updateCounter();
+  saveState();
+});
+
+// tick handling (accounts for time passed)
+function tick() {
+  const now = Date.now();
+  const dt = Math.max(0, now - lastTick) / 1000;
+  lastTick = now;
+  const cps = computeCPS();
+  cornbread += cps * dt;
+  totalEarned += cps * dt;
+  updateCounter();
+  saveState();
+}
+
+function updateCounter() {
+  counterEl.textContent = `Cornbread: ${pretty(Math.floor(cornbread))}`;
+  cpsEl.textContent = `Cornbread/sec: ${pretty(computeCPS())}`;
+  legacyValEl.textContent = legacy;
+  legacyBonusEl.textContent = `+${legacy}%`;
+  // compute ascend hypothetical gain
+  const gain = Math.floor(Math.sqrt(totalEarned / 10000)); // tuned: sqrt(total/10k)
+  ascendGainEl.textContent = gain;
+  renderUpgrades();
+}
+
+// tooltip helpers
+function showTooltipFor(u, ev) {
+  const nextCost = costFor(u);
+  const effect = u.type === 'auto' ? `Produces ${pretty(u.baseValue)} CPS per level` : `Adds ${pretty(u.baseValue)} click power per purchase`;
+  tooltip.innerHTML = `<b>${u.name}</b><div style="margin-top:6px">${u.type==='auto'?'Auto (building)':'Click upgrade'}</div><div style="margin-top:6px">Level: ${u.level}</div><div style="margin-top:6px">${effect}</div><div style="margin-top:6px">Base cost: ${pretty(u.baseCost)}</div><div style="margin-top:6px">Next cost: <b>${pretty(nextCost)}</b></div>`;
+  tooltip.style.display = 'block';
+  positionTooltip(ev);
+}
+function positionTooltip(ev) {
+  const pad = 12;
+  let x = ev.clientX + pad;
+  let y = ev.clientY + pad;
+  // keep inside viewport
+  const rect = tooltip.getBoundingClientRect();
+  if (x + rect.width > window.innerWidth) x = ev.clientX - rect.width - pad;
+  if (y + rect.height > window.innerHeight) y = ev.clientY - rect.height - pad;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = y + 'px';
+}
+function hideTooltip(){ tooltip.style.display = 'none'; }
+
+// Ascend logic: calculate gain from totalEarned; confirm resets most progress but keeps legacy
+const ascendBtn = document.getElementById('ascendBtn');
+const confirmAscendBtn = document.getElementById('confirmAscend');
+ascendBtn.addEventListener('click', ()=> {
+  const gain = Math.floor(Math.sqrt(totalEarned / 10000));
+  alert(`If you ascend now you will earn ${gain} Legacy point(s). Ascend will reset most progress but keep Legacy points.`);
+});
+confirmAscendBtn.addEventListener('click', ()=> {
+  const gain = Math.floor(Math.sqrt(totalEarned / 10000));
+  if (gain <= 0) { alert("You don't earn any Legacy points yet. Keep earning more Cornbread!"); return; }
+  if (!confirm(`Ascend now? You will earn ${gain} Legacy point(s) and reset your progress.`)) return;
+  // apply legacy and reset core progress but preserve legacy and legacy bonus
+  legacy += gain;
+  // reset cornbread, clickValue, totalEarned, upgrade levels to 0
+  cornbread = 0;
+  clickValue = 1;
+  totalEarned = 0;
+  upgrades.forEach(u => u.level = 0);
+  lastTick = Date.now();
+  saveState();
+  updateCounter();
+  alert(`Ascended! You gained ${gain} Legacy point(s).`);
+});
+
+// Reset save button
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if (!confirm('Reset your save completely? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+});
+
+// quick save & init
 updateCounter();
+setInterval(tick, 1000);
+setInterval(saveState, 5000);
 
-// --- AI Chat ---
-const aiChatTab=document.getElementById("aiChatTab");
-const toggleAIChat=document.getElementById("toggleAIChat");
-const chatContent=document.getElementById("chatContent");
-const chatLog=document.getElementById("chatLog");
-const chatInput=document.getElementById("chatInput");
-const sendChat=document.getElementById("sendChat");
+// --------------------- AI Chat (unchanged) ---------------------
+const aiChatTab = document.getElementById("aiChatTab");
+const toggleAIChat = document.getElementById("toggleAIChat");
+const chatContent = document.getElementById("chatContent");
+const chatLog = document.getElementById("chatLog");
+const chatInput = document.getElementById("chatInput");
+const sendChat = document.getElementById("sendChat");
+toggleAIChat && toggleAIChat.addEventListener("click", ()=>{ chatContent.style.display = chatContent.style.display==="none"?"block":"none"; });
 
-toggleAIChat.addEventListener("click",()=>{ chatContent.style.display=chatContent.style.display==="none"?"block":"none"; });
+setInterval(()=>{
+  const ultra = upgrades.find(u=>u.id==='click2' || u.name==='Ultra Click');
+  if (ultra && ultra.level > 10) aiChatTab.style.display="block";
+},1000);
 
-setInterval(()=>{ const ultra=upgrades.find(u=>u.name==="Ultra Click"); if(ultra.value>10) aiChatTab.style.display="block"; },1000);
-
-let chatHistory=JSON.parse(localStorage.getItem('chatHistory')||'[]');
+let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
 
 async function sendMessage(msg){
   if(!msg) return;
   chatHistory.push({role:'user',content:msg});
-  const loadingDiv=document.createElement('div');
-  loadingDiv.textContent="AI is thinking...";
+  const loadingDiv = document.createElement('div');
+  loadingDiv.textContent = "AI is thinking...";
   chatLog.appendChild(loadingDiv);
-  chatLog.scrollTop=chatLog.scrollHeight;
+  chatLog.scrollTop = chatLog.scrollHeight;
 
-  try{
-    const resp=await fetch('broken-pine-f57b.sharpmason233.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})});
-    const data=await resp.json();
+  try {
+    const resp = await fetch('broken-pine-f57b.sharpmason233.workers.dev', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:chatHistory})
+    });
+    const data = await resp.json();
     chatHistory.push({role:'assistant',content:data.reply});
-    localStorage.setItem('chatHistory',JSON.stringify(chatHistory));
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     loadingDiv.remove();
     const userDiv=document.createElement('div'); userDiv.textContent='You: '+msg; userDiv.style.fontWeight='bold';
     const botDiv=document.createElement('div'); botDiv.textContent='AI: '+data.reply;
     chatLog.appendChild(userDiv); chatLog.appendChild(botDiv);
-    chatLog.scrollTop=chatLog.scrollHeight;
-  } catch(err){ console.error(err); loadingDiv.textContent="Error contacting AI bot."; }
+    chatLog.scrollTop = chatLog.scrollHeight;
+  } catch(err){
+    console.error(err);
+    loadingDiv.textContent="Error contacting AI bot.";
+  }
 }
 
-sendChat.addEventListener('click',()=>{ const msg=chatInput.value.trim(); if(msg==='') return; sendMessage(msg); chatInput.value=''; });
-chatInput.addEventListener('keypress',e=>{ if(e.key==='Enter') sendChat.click(); });
+sendChat && sendChat.addEventListener('click', ()=>{
+  const msg = chatInput.value.trim();
+  if(msg==='') return;
+  sendMessage(msg);
+  chatInput.value='';
+});
+chatInput && chatInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendChat.click(); });
 
-// --- Make AI Chat Draggable ---
-dragElement(aiChatTab,toggleAIChat);
-function dragElement(elmnt,header){ let pos1=0,pos2=0,pos3=0,pos4=0; if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
+// tooltip hides on scroll or resize
+window.addEventListener('scroll', hideTooltip);
+window.addEventListener('resize', hideTooltip);
+
+// draggable chat
+dragElement(aiChatTab, toggleAIChat);
+function dragElement(elmnt, header) {
+  if(!elmnt) return;
+  let pos1=0,pos2=0,pos3=0,pos4=0;
+  if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
   function dragMouseDown(e){ e=e||window.event; e.preventDefault(); pos3=e.clientX; pos4=e.clientY; document.onmouseup=closeDragElement; document.onmousemove=elementDrag; }
   function elementDrag(e){ e=e||window.event; e.preventDefault(); pos1=pos3-e.clientX; pos2=pos4-e.clientY; pos3=e.clientX; pos4=e.clientY; elmnt.style.top=(elmnt.offsetTop-pos2)+"px"; elmnt.style.left=(elmnt.offsetLeft-pos1)+"px"; }
   function closeDragElement(){ document.onmouseup=null; document.onmousemove=null; }
