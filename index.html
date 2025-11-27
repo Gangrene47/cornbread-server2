@@ -164,8 +164,7 @@ async function sendMessage(msg){
   if(!msg) return;
   chatHistory.push({role:'user',content:msg});
   try {
-    const resp = await fetch('winter-glade-ed3b.sharpmason233.workers.dev
-', {
+    const resp = await fetch('broken-pine-f57b.sharpmason233.workers.dev', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:chatHistory})
@@ -218,4 +217,5 @@ function dragElement(elmnt, header) {
 </script>
 </body>
 </html>
+
 
