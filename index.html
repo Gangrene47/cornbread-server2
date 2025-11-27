@@ -22,6 +22,7 @@
     </style>
 </head>
 <body>
+
 <div id="left">
     <h1>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</h1>
     <h2 id="serverIP">Server IP: gangrene.mexicancornbread.org</h2>
@@ -54,13 +55,12 @@
     <div id="upgrades"></div>
 </div>
 
-<!-- AI Chat Tab -->
 <div id="aiChatTab">
-    <button id="toggleAIChat" style="margin-bottom:10px;width:100%;cursor:pointer;font-family:'Comic Sans MS',cursive;font-size:14px;border:2px solid #c0392b;background:#fff8e1;border-radius:5px;">Toggle AI Study Chat</button>
+    <button id="toggleAIChat">Toggle AI Study Chat</button>
     <div id="chatContent">
         <div id="chatLog"></div>
         <input type="text" id="chatInput" placeholder="Ask a question...">
-        <button id="sendChat" style="width:100%; margin-top:5px;">Send</button>
+        <button id="sendChat">Send</button>
     </div>
 </div>
 
@@ -78,7 +78,7 @@ async function updateStatus() {
 }
 updateStatus(); setInterval(updateStatus,30000);
 
-// --- Clicker Setup ---
+// --- Clicker ---
 let cornbread = Number(localStorage.getItem('cornbread')) || 0;
 let clickValue = Number(localStorage.getItem('clickValue')) || 1;
 let autoValue = Number(localStorage.getItem('autoValue')) || 0;
@@ -105,19 +105,15 @@ const clickCornbread = document.getElementById("clickCornbread");
 
 function updateCounter() {
     counter.textContent = `Cornbread: ${cornbread}`;
-    let totalCPS = 0;
-    upgrades.forEach(u=>{ if(u.type==="auto") totalCPS += u.value; });
+    let totalCPS = upgrades.filter(u=>u.type==="auto").reduce((sum,u)=>sum+u.value,0);
     cpsCounter.textContent = `Cornbread/sec: ${totalCPS}`;
     
     upgradesDiv.innerHTML = "";
     upgrades.forEach((u,i)=>{
         const btn = document.createElement("button");
         btn.className="upgradeButton";
-        if(u.type==="auto"){
-            btn.textContent = `${u.name} (+${u.value}/sec) - Cost: ${u.cost}`;
-        } else {
-            btn.textContent = `${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
-        }
+        if(u.type==="auto") btn.textContent = `${u.name} (+${u.value}/sec) - Cost: ${u.cost}`;
+        else btn.textContent = `${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
         btn.onclick = ()=>buyUpgrade(i);
         upgradesDiv.appendChild(btn);
     });
@@ -129,11 +125,11 @@ function updateCounter() {
 
 function buyUpgrade(i){
     const u = upgrades[i];
-    if(cornbread>=u.cost){
+    if(cornbread >= u.cost){
         cornbread -= u.cost;
-        if(u.type==="click"){ clickValue+=u.value; u.value*=2; }
-        else { autoValue+=u.value; u.value*=2; }
-        u.cost = Math.floor(u.cost*1.5);
+        if(u.type==="click"){ clickValue += u.value; u.value *= 2; }
+        else { autoValue += u.value; u.value *= 2; }
+        u.cost = Math.floor(u.cost * 1.5);
         updateCounter();
     }
 }
@@ -157,7 +153,6 @@ const sendChat = document.getElementById("sendChat");
 
 toggleAIChat.addEventListener("click", ()=>{ chatContent.style.display = chatContent.style.display==="none"?"block":"none"; });
 
-// Unlock AI chat when Ultra Click bought
 setInterval(()=>{
   const ultra = upgrades.find(u=>u.name==="Ultra Click");
   if(ultra.value>10) aiChatTab.style.display="block";
@@ -169,7 +164,7 @@ async function sendMessage(msg){
   if(!msg) return;
   chatHistory.push({role:'user',content:msg});
   try {
-    const resp = await fetch('yes-8hx.pages.dev', {
+    const resp = await fetch('https://vite-react-template.sharpmason233.workers.dev', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:chatHistory})
@@ -182,7 +177,9 @@ async function sendMessage(msg){
     chatLog.scrollTop = chatLog.scrollHeight;
   } catch(err){
     console.error(err);
-    alert("Error contacting AI bot. Make sure your Worker is deployed and API key is set.");
+    const errorDiv=document.createElement('div');
+    errorDiv.textContent="Error contacting AI bot. Make sure your Worker is deployed and API key is set.";
+    chatLog.appendChild(errorDiv);
   }
 }
 
@@ -197,11 +194,11 @@ chatInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendChat.click()
 // --- Make AI Chat Draggable ---
 dragElement(aiChatTab, toggleAIChat);
 function dragElement(elmnt, header) {
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  if (header) { header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
+  let pos1=0,pos2=0,pos3=0,pos4=0;
+  if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
 
-  function dragMouseDown(e) {
-    e = e || window.event; e.preventDefault();
+  function dragMouseDown(e){
+    e=e||window.event; e.preventDefault();
     pos3=e.clientX; pos4=e.clientY;
     document.onmouseup=closeDragElement;
     document.onmousemove=elementDrag;
