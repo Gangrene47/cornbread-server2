@@ -18,60 +18,77 @@
     flex-wrap: wrap;
   }
   #left, #right { padding: 10px; }
-  #left { flex: 1; min-width: 300px; max-width: 600px; text-align: center; }
+  #left {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    text-align: center;
+  }
   h1 { font-size: 24px; margin: 10px 0; }
   #serverIP { font-size: 18px; margin: 5px 0; }
   #recipe {
-    font-family:'Comic Sans MS', cursive;
-    font-size:16px;
-    color:black;
-    text-align:left;
-    background-color:#fff8e1;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    border:3px solid red;
-    margin-top:20px;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 16px;
+    color: black;
+    text-align: left;
+    background-color: #fff8e1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 3px solid red;
+    margin-top: 20px;
   }
   img {
-    max-width:100%;
-    height:auto;
-    border-radius:10px;
-    cursor:pointer;
-    border:3px solid red;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 3px solid red;
     transition: transform 0.2s;
-    display:block;
+    display: block;
     margin: 10px auto;
   }
   img:hover { transform: scale(1.05); }
   #right {
     flex: 0 0 400px;
-    background-color:#fff8e1;
-    border-radius:10px;
-    padding:20px;
-    margin-left:20px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    text-align:center;
-    border:3px solid red;
+    background-color: #fff8e1;
+    border-radius: 10px;
+    padding: 20px;
+    margin-left: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    text-align: center;
+    border: 3px solid red;
     min-width: 300px;
   }
-  #cornbreadCounter { font-size:18px; margin-bottom:5px; }
-  #cpsCounter { font-size:14px; margin-bottom:20px; }
+  #cornbreadCounter { font-size: 18px; margin-bottom: 5px; }
+  #cpsCounter { font-size: 14px; margin-bottom: 20px; }
   .upgradeButton {
-    display:block; margin:5px auto;
-    padding:10px;
-    font-size:14px;
-    font-family:'Comic Sans MS', cursive;
-    color:black; width:90%; cursor:pointer;
-    border-radius:5px; border:2px solid #c0392b;
-    background-color:#fdf6e3; transition:0.2s;
+    display: block;
+    margin: 5px auto;
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'Comic Sans MS', cursive;
+    color: black;
+    width: 90%;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 2px solid #c0392b;
+    background-color: #fdf6e3;
+    transition: 0.2s;
   }
-  .upgradeButton:hover:not(:disabled){ background-color:#c0392b; color:white; }
+  .upgradeButton:hover:not(:disabled){ background-color: #c0392b; color:white; }
   .upgradeButton:disabled{ opacity:0.5; cursor:not-allowed; }
   #aiChatTab {
-    display:none; position:fixed; top:50px; right:20px; width:300px;
-    background:#fff8e1; border:3px solid red; border-radius:10px;
-    padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:100;
+    display:none;
+    position:fixed;
+    top:50px;
+    right:20px;
+    width:300px;
+    background:#fff8e1;
+    border:3px solid red;
+    border-radius:10px;
+    padding:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    z-index:100;
   }
   #chatContent { display:none; font-family:'Comic Sans MS', cursive; font-size:14px; color:black; }
   #chatLog { height:200px; overflow-y:auto; border:1px solid #c0392b; padding:5px; margin-bottom:5px; background:white; }
@@ -90,14 +107,16 @@
   <p>Status: <span id="status">Loading...</span></p>
   <p>Players: <span id="players">0 / 0</span></p>
 
-  <!-- Original Cornbread Image -->
-  <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" 
-       alt="Cornbread" width="300">
+  <!-- Center Cornbread Image CLICKABLE -->
+  <a href="https://southernbite.com/moms-mexican-cornbread-the-national-cornbread-cook-off/" target="_blank">
+    <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread">
+  </a>
 
-  <!-- Animated GIF centered with red border -->
-  <img src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" 
-       alt="Animated Cornbread GIF" 
-       style="border:3px solid red; border-radius:10px; max-width:100%; margin:20px auto; display:block;">
+  <!-- Animated GIF #1 -->
+  <img src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" alt="Animated Cornbread GIF 1">
+
+  <!-- Animated GIF #2 (Tumblr GIF) -->
+  <img src="https://64.media.tumblr.com/0975771a0de36698e06cf2d2a0ce4b3b/tumblr_ml8ihl8v1B1s4rkemo4_250.gif" alt="Animated Cornbread GIF 2">
 
   <div id="recipe">
     <h3>Ingredients</h3>
@@ -143,15 +162,15 @@ async function updateStatus() {
     const response = await fetch(url);
     const data = await response.json();
     document.getElementById("status").textContent = data.online ? "Online" : "Offline";
-    document.getElementById("players").textContent = data.players?.online != null && data.players?.max != null ? `${data.players.online} / ${data.players.max}` : "0 / 0";
-  } catch(err) {
-    console.error(err);
-    document.getElementById("status").textContent = "Error fetching server status";
-  }
+    document.getElementById("players").textContent =
+      data.players?.online != null && data.players?.max != null
+      ? `${data.players.online} / ${data.players.max}`
+      : "0 / 0";
+  } catch { document.getElementById("status").textContent = "Error"; }
 }
 updateStatus(); setInterval(updateStatus,30000);
 
-// --- Clicker ---
+// --- Cornbread Clicker ---
 let cornbread = Number(localStorage.getItem('cornbread')) || 0;
 let clickValue = Number(localStorage.getItem('clickValue')) || 1;
 
@@ -177,118 +196,81 @@ const clickCornbread = document.getElementById("clickCornbread");
 
 function updateCounter() {
   counter.textContent = `Cornbread: ${cornbread}`;
-  const totalCPS = upgrades.filter(u=>u.type==="auto").reduce((sum,u)=>sum+u.value,0);
+  const totalCPS = upgrades.filter(u => u.type === "auto").reduce((sum,u)=>sum+u.value,0);
   cpsCounter.textContent = `Cornbread/sec: ${totalCPS}`;
-  
+
   upgradesDiv.innerHTML = "";
   upgrades.forEach((u,i)=>{
-    const btn = document.createElement("button");
+    const btn=document.createElement("button");
     btn.className="upgradeButton";
-    btn.disabled = cornbread < u.cost;
-    if(u.type==="auto") btn.textContent = `${u.name} (+${u.value}/sec) - Cost: ${u.cost}`;
-    else btn.textContent = `${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
-    btn.onclick = ()=>buyUpgrade(i);
+    btn.disabled=cornbread<u.cost;
+    btn.textContent=u.type==="auto"?`${u.name} (+${u.value}/sec) - Cost: ${u.cost}`:`${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
+    btn.onclick=()=>buyUpgrade(i);
     upgradesDiv.appendChild(btn);
   });
+
   localStorage.setItem('cornbread',cornbread);
   localStorage.setItem('clickValue',clickValue);
 }
 
 function buyUpgrade(i){
-  const u = upgrades[i];
-  if(cornbread >= u.cost){
-    cornbread -= u.cost;
-    if(u.type==="click"){ clickValue += u.value; u.value *= 2; }
-    else { u.value *= 2; }
-    u.cost = Math.floor(u.cost * 1.5);
+  const u=upgrades[i];
+  if(cornbread>=u.cost){
+    cornbread-=u.cost;
+    if(u.type==="click"){ clickValue+=u.value; u.value*=2; }
+    else{ u.value*=2; }
+    u.cost=Math.floor(u.cost*1.5);
     updateCounter();
   }
 }
 
-clickCornbread.onclick = ()=>{ cornbread += clickValue; updateCounter(); };
-
-setInterval(()=>{
-  upgrades.forEach(u=>{ if(u.type==="auto") cornbread += u.value; });
-  updateCounter();
-},1000);
-
+clickCornbread.onclick=()=>{ cornbread+=clickValue; updateCounter(); };
+setInterval(()=>{ upgrades.forEach(u=>{ if(u.type==="auto") cornbread+=u.value; }); updateCounter(); },1000);
 updateCounter();
 
 // --- AI Chat ---
-const aiChatTab = document.getElementById("aiChatTab");
-const toggleAIChat = document.getElementById("toggleAIChat");
-const chatContent = document.getElementById("chatContent");
-const chatLog = document.getElementById("chatLog");
-const chatInput = document.getElementById("chatInput");
-const sendChat = document.getElementById("sendChat");
+const aiChatTab=document.getElementById("aiChatTab");
+const toggleAIChat=document.getElementById("toggleAIChat");
+const chatContent=document.getElementById("chatContent");
+const chatLog=document.getElementById("chatLog");
+const chatInput=document.getElementById("chatInput");
+const sendChat=document.getElementById("sendChat");
 
-toggleAIChat.addEventListener("click", ()=>{ chatContent.style.display = chatContent.style.display==="none"?"block":"none"; });
+toggleAIChat.addEventListener("click",()=>{ chatContent.style.display=chatContent.style.display==="none"?"block":"none"; });
 
-setInterval(()=>{
-  const ultra = upgrades.find(u=>u.name==="Ultra Click");
-  if(ultra.value>10) aiChatTab.style.display="block";
-},1000);
+setInterval(()=>{ const ultra=upgrades.find(u=>u.name==="Ultra Click"); if(ultra.value>10) aiChatTab.style.display="block"; },1000);
 
-let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+let chatHistory=JSON.parse(localStorage.getItem('chatHistory')||'[]');
 
 async function sendMessage(msg){
   if(!msg) return;
   chatHistory.push({role:'user',content:msg});
-  const loadingDiv = document.createElement('div');
-  loadingDiv.textContent = "AI is thinking...";
+  const loadingDiv=document.createElement('div');
+  loadingDiv.textContent="AI is thinking...";
   chatLog.appendChild(loadingDiv);
-  chatLog.scrollTop = chatLog.scrollHeight;
+  chatLog.scrollTop=chatLog.scrollHeight;
 
-  try {
-    const resp = await fetch('broken-pine-f57b.sharpmason233.workers.dev', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:chatHistory})
-    });
-    const data = await resp.json();
+  try{
+    const resp=await fetch('broken-pine-f57b.sharpmason233.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})});
+    const data=await resp.json();
     chatHistory.push({role:'assistant',content:data.reply});
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    localStorage.setItem('chatHistory',JSON.stringify(chatHistory));
     loadingDiv.remove();
     const userDiv=document.createElement('div'); userDiv.textContent='You: '+msg; userDiv.style.fontWeight='bold';
     const botDiv=document.createElement('div'); botDiv.textContent='AI: '+data.reply;
-    chatLog.appendChild(userDiv);
-    chatLog.appendChild(botDiv);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  } catch(err){
-    console.error(err);
-    loadingDiv.textContent="Error contacting AI bot.";
-  }
+    chatLog.appendChild(userDiv); chatLog.appendChild(botDiv);
+    chatLog.scrollTop=chatLog.scrollHeight;
+  } catch(err){ console.error(err); loadingDiv.textContent="Error contacting AI bot."; }
 }
 
-sendChat.addEventListener('click', ()=>{
-  const msg = chatInput.value.trim();
-  if(msg==='') return;
-  sendMessage(msg);
-  chatInput.value='';
-});
-chatInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendChat.click(); });
+sendChat.addEventListener('click',()=>{ const msg=chatInput.value.trim(); if(msg==='') return; sendMessage(msg); chatInput.value=''; });
+chatInput.addEventListener('keypress',e=>{ if(e.key==='Enter') sendChat.click(); });
 
 // --- Make AI Chat Draggable ---
-dragElement(aiChatTab, toggleAIChat);
-function dragElement(elmnt, header) {
-  let pos1=0,pos2=0,pos3=0,pos4=0;
-  if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
-
-  function dragMouseDown(e){
-    e=e||window.event; e.preventDefault();
-    pos3=e.clientX; pos4=e.clientY;
-    document.onmouseup=closeDragElement;
-    document.onmousemove=elementDrag;
-  }
-
-  function elementDrag(e){
-    e=e||window.event; e.preventDefault();
-    pos1=pos3-e.clientX; pos2=pos4-e.clientY;
-    pos3=e.clientX; pos4=e.clientY;
-    elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
-    elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";
-  }
-
+dragElement(aiChatTab,toggleAIChat);
+function dragElement(elmnt,header){ let pos1=0,pos2=0,pos3=0,pos4=0; if(header){ header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
+  function dragMouseDown(e){ e=e||window.event; e.preventDefault(); pos3=e.clientX; pos4=e.clientY; document.onmouseup=closeDragElement; document.onmousemove=elementDrag; }
+  function elementDrag(e){ e=e||window.event; e.preventDefault(); pos1=pos3-e.clientX; pos2=pos4-e.clientY; pos3=e.clientX; pos4=e.clientY; elmnt.style.top=(elmnt.offsetTop-pos2)+"px"; elmnt.style.left=(elmnt.offsetLeft-pos1)+"px"; }
   function closeDragElement(){ document.onmouseup=null; document.onmousemove=null; }
 }
 </script>
