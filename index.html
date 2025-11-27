@@ -33,7 +33,16 @@
     border:3px solid red;
     margin-top:20px;
   }
-  img { max-width:100%; height:auto; border-radius:10px; cursor:pointer; border:3px solid red; transition: transform 0.2s; }
+  img {
+    max-width:100%;
+    height:auto;
+    border-radius:10px;
+    cursor:pointer;
+    border:3px solid red;
+    transition: transform 0.2s;
+    display:block;
+    margin: 10px auto;
+  }
   img:hover { transform: scale(1.05); }
   #right {
     flex: 0 0 400px;
@@ -80,7 +89,16 @@
   <h2 id="serverIP">Server IP: gangrene.mexicancornbread.org</h2>
   <p>Status: <span id="status">Loading...</span></p>
   <p>Players: <span id="players">0 / 0</span></p>
-  <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
+
+  <!-- Original Cornbread Image -->
+  <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" 
+       alt="Cornbread" width="300">
+
+  <!-- Animated GIF centered with red border -->
+  <img src="https://i.makeagif.com/media/2-13-2016/rp3rhn.gif" 
+       alt="Animated Cornbread GIF" 
+       style="border:3px solid red; border-radius:10px; max-width:100%; margin:20px auto; display:block;">
+
   <div id="recipe">
     <h3>Ingredients</h3>
     <ul>
@@ -276,6 +294,7 @@ function dragElement(elmnt, header) {
 </script>
 </body>
 </html>
+
 
 
 
