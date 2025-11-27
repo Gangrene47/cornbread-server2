@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Press Start 2P', cursive; background-color: #fdf6e3; color: #c0392b; text-align: center; display:flex; flex-direction:row; justify-content:space-around; margin:0; padding:20px; }
+        #left { flex:1; max-width:600px; }
+        h1 { font-size:24px; margin:10px 0; }
+        #serverIP { font-family:'Press Start 2P', cursive; color:#c0392b; font-size:18px; margin:5px 0; }
+        #recipe { font-family:'Comic Sans MS', cursive; font-size:16px; color:black; margin:20px auto; text-align:left; background-color:#fff8e1; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2); border:3px solid red; }
+        img { max-width:100%; height:auto; border-radius:10px; cursor:pointer; border:3px solid red; }
+        #status, #players { font-weight:bold; font-size:16px; }
+        #right { flex:0 0 400px; background-color:#fff8e1; border-radius:10px; padding:20px; margin-left:20px; box-shadow:0 2px 6px rgba(0,0,0,0.2); text-align:center; border:3px solid red; }
+        #cornbreadCounter { font-size:18px; margin-bottom:5px; }
+        #cpsCounter { font-size:14px; margin-bottom:20px; }
+        .upgradeButton { display:block; margin:5px auto; padding:10px; font-size:14px; font-family:'Comic Sans MS', cursive; color:black; width:90%; cursor:pointer; border-radius:5px; border:2px solid #c0392b; background-color:#fdf6e3; }
+        #aiChatTab { display:none; position:fixed; top:50px; right:20px; width:300px; background:#fff8e1; border:3px solid red; border-radius:10px; padding:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:100; }
+        #chatContent { display:none; font-family:'Comic Sans MS', cursive; font-size:14px; color:black; }
+        #chatLog { height:200px; overflow-y:auto; border:1px solid #c0392b; padding:5px; margin-bottom:5px; background:white; }
+        #chatInput { width:calc(100% - 10px); padding:5px; font-family:'Comic Sans MS', cursive; font-size:14px; }
+    </style>
+</head>
+<body>
+<div id="left">
+    <h1>MEXICAN CORNBREAD'S MINECRAFT ANARCHY SERVER (1.16.5)</h1>
+    <h2 id="serverIP">Server IP: gangrene.mexicancornbread.org</h2>
+    <p>Status: <span id="status">Loading...</span></p>
+    <p>Players: <span id="players">0 / 0</span></p>
+    <img src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Cornbread" width="300">
+    <div id="recipe">
+        <h3>Ingredients</h3>
+        <ul>
+            <li>1/2 pound ground beef</li>
+            <li>1 large onion, chopped</li>
+            <li>3 tablespoons vegetable oil</li>
+            <li>1 cup self-rising cornmeal</li>
+            <li>1 cup buttermilk</li>
+            <li>1 (14.75 oz) can cream style corn</li>
+            <li>2 eggs well beaten</li>
+            <li>1 (4 oz) can sliced jalapenos, drained (optional)</li>
+            <li>1 cup shredded cheddar cheese</li>
+        </ul>
+        <h3>Instructions</h3>
+        <p>...Full instructions here...</p>
+    </div>
+</div>
+
+<div id="right">
+    <h2>Cornbread Clicker</h2>
+    <p id="cornbreadCounter">Cornbread: 0</p>
+    <p id="cpsCounter">Cornbread/sec: 0</p>
+    <img id="clickCornbread" src="https://southernbite.com/wp-content/uploads/2024/01/Moms-Mexican-Cornbread-5.jpg" alt="Click Cornbread" width="150">
+    <div id="upgrades"></div>
+</div>
+
+<!-- AI Chat Tab -->
+<div id="aiChatTab">
+    <button id="toggleAIChat" style="margin-bottom:10px;width:100%;cursor:pointer;font-family:'Comic Sans MS',cursive;font-size:14px;border:2px solid #c0392b;background:#fff8e1;border-radius:5px;">Toggle AI Study Chat</button>
+    <div id="chatContent">
+        <div id="chatLog"></div>
+        <input type="text" id="chatInput" placeholder="Ask a question...">
+        <button id="sendChat" style="width:100%; margin-top:5px;">Send</button>
+    </div>
+</div>
+
+<script>
+// --- Server Status ---
+async function updateStatus() {
+    const ip = "gangrene.mexicancornbread.org";
+    const url = `https://api.mcsrvstat.us/2/${ip}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        document.getElementById("status").textContent = data.online ? "Online" : "Offline";
+        document.getElementById("players").textContent = data.players?.online != null && data.players?.max != null ? `${data.players.online} / ${data.players.max}` : "0 / 0";
+    } catch { document.getElementById("status").textContent = "Error"; }
+}
+updateStatus(); setInterval(updateStatus,30000);
+
+// --- Clicker Setup ---
+let cornbread = Number(localStorage.getItem('cornbread')) || 0;
+let clickValue = Number(localStorage.getItem('clickValue')) || 1;
+let autoValue = Number(localStorage.getItem('autoValue')) || 0;
+
+let upgrades = [
+  {name:"Click Upgrade",type:"click",value:1,cost:10},
+  {name:"Ultra Click",type:"click",value:10,cost:1000},
+  {name:"Auto Cornbread",type:"auto",value:1,cost:50},
+  {name:"Cornbread Factory",type:"auto",value:5,cost:500},
+  {name:"Mega Click",type:"click",value:50,cost:5000},
+  {name:"Cornbread Farm",type:"auto",value:25,cost:2500},
+  {name:"Super Click",type:"click",value:100,cost:10000},
+  {name:"Cornbread Mill",type:"auto",value:100,cost:10000},
+  {name:"Ultra Factory",type:"auto",value:500,cost:50000},
+  {name:"Ultimate Click",type:"click",value:500,cost:50000},
+  {name:"Cornbread Empire",type:"auto",value:1000,cost:100000},
+  {name:"Hyper Click",type:"click",value:1000,cost:100000},
+];
+
+const counter = document.getElementById("cornbreadCounter");
+const cpsCounter = document.getElementById("cpsCounter");
+const upgradesDiv = document.getElementById("upgrades");
+const clickCornbread = document.getElementById("clickCornbread");
+
+function updateCounter() {
+    counter.textContent = `Cornbread: ${cornbread}`;
+    let totalCPS = 0;
+    upgrades.forEach(u=>{ if(u.type==="auto") totalCPS += u.value; });
+    cpsCounter.textContent = `Cornbread/sec: ${totalCPS}`;
+    
+    upgradesDiv.innerHTML = "";
+    upgrades.forEach((u,i)=>{
+        const btn = document.createElement("button");
+        btn.className="upgradeButton";
+        if(u.type==="auto"){
+            btn.textContent = `${u.name} (+${u.value}/sec) - Cost: ${u.cost}`;
+        } else {
+            btn.textContent = `${u.name} (+${u.value} per click) - Cost: ${u.cost}`;
+        }
+        btn.onclick = ()=>buyUpgrade(i);
+        upgradesDiv.appendChild(btn);
+    });
+
+    localStorage.setItem('cornbread',cornbread);
+    localStorage.setItem('clickValue',clickValue);
+    localStorage.setItem('autoValue',autoValue);
+}
+
+function buyUpgrade(i){
+    const u = upgrades[i];
+    if(cornbread>=u.cost){
+        cornbread -= u.cost;
+        if(u.type==="click"){ clickValue+=u.value; u.value*=2; }
+        else { autoValue+=u.value; u.value*=2; }
+        u.cost = Math.floor(u.cost*1.5);
+        updateCounter();
+    }
+}
+
+clickCornbread.onclick = ()=>{ cornbread += clickValue; updateCounter(); };
+
+setInterval(()=>{
+    upgrades.forEach(u=>{ if(u.type==="auto") cornbread += u.value; });
+    updateCounter();
+},1000);
+
+updateCounter();
+
+// --- AI Chat ---
+const aiChatTab = document.getElementById("aiChatTab");
+const toggleAIChat = document.getElementById("toggleAIChat");
+const chatContent = document.getElementById("chatContent");
+const chatLog = document.getElementById("chatLog");
+const chatInput = document.getElementById("chatInput");
+const sendChat = document.getElementById("sendChat");
+
+toggleAIChat.addEventListener("click", ()=>{ chatContent.style.display = chatContent.style.display==="none"?"block":"none"; });
+
+// Unlock AI chat when Ultra Click bought
+setInterval(()=>{
+  const ultra = upgrades.find(u=>u.name==="Ultra Click");
+  if(ultra.value>10) aiChatTab.style.display="block";
+},1000);
+
+let chatHistory=[{role:'system',content:'You are a helpful study AI assistant.'}];
+
+async function sendMessage(msg){
+  if(!msg) return;
+  chatHistory.push({role:'user',content:msg});
+  try {
+    const resp = await fetch('yes-8hx.pages.dev', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:chatHistory})
+    });
+    const data = await resp.json();
+    chatHistory.push({role:'assistant',content:data.reply});
+    const userDiv=document.createElement('div'); userDiv.textContent='You: '+msg; userDiv.style.fontWeight='bold';
+    const botDiv=document.createElement('div'); botDiv.textContent='AI: '+data.reply;
+    chatLog.appendChild(userDiv); chatLog.appendChild(botDiv);
+    chatLog.scrollTop = chatLog.scrollHeight;
+  } catch(err){
+    console.error(err);
+    alert("Error contacting AI bot. Make sure your Worker is deployed and API key is set.");
+  }
+}
+
+sendChat.addEventListener('click', ()=>{
+  const msg = chatInput.value.trim();
+  if(msg==='') return;
+  sendMessage(msg);
+  chatInput.value='';
+});
+chatInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendChat.click(); });
+
+// --- Make AI Chat Draggable ---
+dragElement(aiChatTab, toggleAIChat);
+function dragElement(elmnt, header) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (header) { header.style.cursor="move"; header.onmousedown=dragMouseDown; } else { elmnt.onmousedown=dragMouseDown; }
+
+  function dragMouseDown(e) {
+    e = e || window.event; e.preventDefault();
+    pos3=e.clientX; pos4=e.clientY;
+    document.onmouseup=closeDragElement;
+    document.onmousemove=elementDrag;
+  }
+
+  function elementDrag(e){
+    e=e||window.event; e.preventDefault();
+    pos1=pos3-e.clientX; pos2=pos4-e.clientY;
+    pos3=e.clientX; pos4=e.clientY;
+    elmnt.style.top=(elmnt.offsetTop-pos2)+"px";
+    elmnt.style.left=(elmnt.offsetLeft-pos1)+"px";
+  }
+
+  function closeDragElement(){ document.onmouseup=null; document.onmousemove=null; }
+}
+</script>
+</body>
+</html>
